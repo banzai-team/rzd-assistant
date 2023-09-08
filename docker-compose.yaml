@@ -1,14 +1,14 @@
 services:
-  app:
-    container_name: app-dev
-    image: app-dev
-    build:
-      context: dashboard
-      target: development
-    volumes:
-      - ./src:/app/src
-    ports:
-      - 4000:3000
+#  app:
+#    container_name: app-dev
+#    image: app-dev
+#    build:
+#      context: dashboard
+#      target: development
+#    volumes:
+#      - ./src:/app/src
+#    ports:
+#      - 4000:3000
 #  rabbitmq:
 #    image: rabbitmq:3-management-alpine
 #    container_name: 'rabbitmq'
@@ -26,10 +26,10 @@ services:
 #    ports:
 #      - '5432:5432'
   backend:
-    command:
-      - /bin/sh
-      - -c
-      - sleep 1; npm run migration:run; node main.js
+#    command:
+#      - /bin/sh
+#      - -c
+#      - sleep 1; npm run migration:run; node main.js
     environment:
       DB_NAME: building_predictor
       DB_HOST: postgres
@@ -38,6 +38,8 @@ services:
       DB_PASSWORD: postgres
       RABBIT_HOST: rabbitmq
       RABBIT_PORT: 5672
+      RECOGNITION_HOST: predictor-ml
+      RECOGNITION_PORT: 3333
 
 #    depends_on:
 #      - postgres
@@ -55,6 +57,6 @@ services:
       context: ml
       dockerfile: Dockerfile
     ports:
-      - '3001:80'
+      - '3001:3333'
 volumes:
   app:
