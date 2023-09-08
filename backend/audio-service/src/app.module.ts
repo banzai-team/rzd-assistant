@@ -11,6 +11,7 @@ import { ConversationModule } from './conversation/conversation.module';
     AudioModule,
     ConfigModule.forRoot({
       load: [configuration],
+      isGlobal: true
     }),
     ConversationModule,
   ],

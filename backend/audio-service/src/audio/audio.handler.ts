@@ -14,7 +14,6 @@ export class AudioHandler {
     private readonly t2sConfig;
     private readonly fileStorageConfig: FileStorageConfig;
 
-    
     constructor(private readonly http: HttpService, 
         private configService: ConfigService) {
         this.s2tConfig = this.configService.get('s2t');
@@ -22,7 +21,7 @@ export class AudioHandler {
         this.fileStorageConfig = this.configService.get('fileStorage');
     }
 
-    async persistAudio(file: UploadedFile) {
+    async s2t(file: UploadedFile): Promise<Text> {
         if (this.fileStorageConfig.local) {
             const savePath = join(this.fileStorageConfig.dir, file.filename) 
             this.logger.debug(`Persiting file::${file.filename}.${file.mimetype} locally::${savePath}`)
@@ -33,19 +32,24 @@ export class AudioHandler {
                 }
                 this.logger.debug(`File was successfuly saved in ${savePath}`)
             });
+            const text = await this.s2tInternal({
+                path: savePath,
+            });
+            return text
         } else {
             this.logger.error(`Storing non locally is not supported`)
             throw new HttpException(`Storing file non locally is not supported`, HttpStatus.BAD_REQUEST)
         }
     }
 
-    async s2t(speech: Speech): Promise<Text> {
-        this.logger.debug(`Transforming speech::${speech.path} into text...`);
-        return await firstValueFrom(this.http.post(`${this.s2tConfig.host}:${this.s2tConfig.port}/transform`, {
-            speech
+    private async s2tInternal(speech: Speech): Promise<Text> {
+        this.logger.debug(`Transforming speech::${speech.path} into text. Performing request to::${this.s2tConfig.host}:${this.s2tConfig.port}/transform`);
+        return await firstValueFrom(
+            this.http.post(`http://${this.s2tConfig.host}:${this.s2tConfig.port}/transform`, JSON.stringify({"file_path": speech.path}), {
+            headers: {'Content-Type': 'application/json'}
         })
             .pipe(
-                map(res => ({text: res.data}))
+                map(res => ({text: res.data.result}))
             )
             .pipe(
                 catchError(() => {

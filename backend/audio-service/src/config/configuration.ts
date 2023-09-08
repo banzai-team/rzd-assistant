@@ -10,8 +10,8 @@ const helperConfig = () => ({
     port: process.env.HELPER_PORT
 });
 const s2tConfig = () => ({
-    host: process.env.S2T_HOST,
-    port: process.env.S2T_PORT
+    host: process.env.RECOGNITION_HOST,
+    port: process.env.RECOGNITION_PORT
 });
 const t2sConfig = () => ({
     host: process.env.T2S_HOST,
