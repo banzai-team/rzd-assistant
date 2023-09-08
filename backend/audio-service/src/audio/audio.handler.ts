@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UploadedFile } from './file.dto';
+import { Speech, UploadedFile } from './audio.dto';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 
@@ -19,6 +19,14 @@ export class AudioHandler {
                 return console.log(err);
             }
             console.log("The file was saved!");
-        })
+        });
+    }
+
+    async s2t(speech: Speech) {
+
+    }
+
+    async t2s(text: Text) {    
+
     }
 }
