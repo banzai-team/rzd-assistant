@@ -1,19 +1,12 @@
-#
-FROM python:3.9
+FROM python:3.9 as base
 
-#
-WORKDIR /code
+WORKDIR /speech-app
 
-#
-COPY ./requirements.txt /code/requirements.txt
-#COPY ./models /code/models
-#
-##
-#RUN unzip models/predictor.zip
+COPY ./requirements.txt /speech-app/requirements.txt
 
-#
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /speech-app/requirements.txt
 
+FROM base
 #
 COPY ./app /code/app
 
