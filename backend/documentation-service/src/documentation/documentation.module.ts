@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { DocumentationParser } from './documentation.parser';
 import { DocumentationController } from './documentation.controller';
+import { DocumentationParser } from './documentation.parser';
 
 @Module({
-  providers: [DocumentationParser],
-  controllers: [DocumentationController]
+  controllers: [DocumentationController],
+  providers:[DocumentationParser]
 })
 export class DocumentationModule {}
