@@ -1,0 +1,60 @@
+services:
+  app:
+    container_name: app-dev
+    image: app-dev
+    build:
+      context: dashboard
+      target: development
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 4000:3000
+#  rabbitmq:
+#    image: rabbitmq:3-management-alpine
+#    container_name: 'rabbitmq'
+#    ports:
+#      - 5672:5672
+#      - 15672:15672
+#    volumes:
+#      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+#      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+#  postgres:
+#    image: postgres:12
+#    environment:
+#      POSTGRES_DB: building_predictor
+#      POSTGRES_PASSWORD: postgres
+#    ports:
+#      - '5432:5432'
+  backend:
+    command:
+      - /bin/sh
+      - -c
+      - sleep 1; npm run migration:run; node main.js
+    environment:
+      DB_NAME: building_predictor
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+
+#    depends_on:
+#      - postgres
+#      - rabbitmq
+#      - ml
+    image: banzai/audio-service:v0.0.1
+    build:
+      context: backend/audio-service
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+  ml:
+    image: banzai/predictor-ml:v0.0.1
+    build:
+      context: ml
+      dockerfile: Dockerfile
+    ports:
+      - '3001:80'
+volumes:
+  app:
