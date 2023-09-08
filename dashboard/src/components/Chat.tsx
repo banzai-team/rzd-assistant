@@ -1,6 +1,6 @@
 import React from 'react';
-import {Box} from '@chakra-ui/react';
 
+import {Box} from '@chakra-ui/react';
 import {
     ChatContainer,
     MainContainer,
@@ -9,11 +9,10 @@ import {
     MessageList,
     ConversationHeader,
     Avatar,
-    VoiceCallButton,
-    VideoCallButton,
     InfoButton
 } from '@chatscope/chat-ui-kit-react';
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import Recorder from './AudioRecorder';
 
 const Chat: React.FC = () => {
     return <Box height="100vh">
@@ -23,9 +22,8 @@ const Chat: React.FC = () => {
                     <Avatar src='' name="Emily" />
                     <ConversationHeader.Content userName="Emily" info="Active 10 mins ago" />
                     <ConversationHeader.Actions>
-                        <VoiceCallButton />
-                        <VideoCallButton />
-                        <InfoButton />
+                        {/*<InfoButton onClick={async (values) => send.mutate({ file: values.files[0] })}/>*/}
+                        <Recorder />
                     </ConversationHeader.Actions>
                 </ConversationHeader>
                 <MessageList>
