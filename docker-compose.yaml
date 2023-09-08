@@ -40,15 +40,13 @@ services:
       RABBIT_PORT: 5672
       RECOGNITION_HOST: predictor-ml
       RECOGNITION_PORT: 3333
-
+      FILE_STORAGE_LOCAL: true
+      FILE_STORAGE_DIR: tmp
 #    depends_on:
 #      - postgres
 #      - rabbitmq
 #      - ml
     image: banzai/audio-service:v0.0.1
-    environment:
-      FILE_STORAGE_LOCAL: true
-      FILE_STORAGE_DIR: tmp
     build:
       context: backend/audio-service
       dockerfile: Dockerfile
