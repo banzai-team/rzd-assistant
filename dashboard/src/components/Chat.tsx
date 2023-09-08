@@ -13,13 +13,14 @@ import {
 } from '@chatscope/chat-ui-kit-react';
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Recorder from './AudioRecorder';
+import logo from '../images/rzd.jpeg';
 
 const Chat: React.FC = () => {
     return <Box height="100vh">
         <MainContainer>
             <ChatContainer>
                 <ConversationHeader>
-                    <Avatar src='' name="Emily" />
+                    <Avatar src={logo} name="Emily" />
                     <ConversationHeader.Content userName="Emily" info="Active 10 mins ago" />
                     <ConversationHeader.Actions>
                         {/*<InfoButton onClick={async (values) => send.mutate({ file: values.files[0] })}/>*/}
