@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { AudioModule } from './audio/audio.module';
-import { DocumentationModule } from './documentation/documentation.module';
 import { ConversationModule } from './conversation/conversation.module';
 
 @Module({
@@ -13,7 +12,6 @@ import { ConversationModule } from './conversation/conversation.module';
     ConfigModule.forRoot({
       load: [configuration],
     }),
-    DocumentationModule,
     ConversationModule,
   ],
   controllers: [AppController],
