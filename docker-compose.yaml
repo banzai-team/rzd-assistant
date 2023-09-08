@@ -53,11 +53,13 @@ services:
     ports:
       - '3000:3000'
   ml:
+    volumes:
+    - /tmp:/tmp
     image: banzai/predictor-ml:v0.0.1
     build:
       context: ml
       dockerfile: Dockerfile
     ports:
-      - '3001:80'
+      - '3001:3333'
 volumes:
   app:
