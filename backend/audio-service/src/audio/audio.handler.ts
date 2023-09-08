@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Speech, UploadedFile } from './audio.dto';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
@@ -32,6 +32,9 @@ export class AudioHandler {
                 }
                 this.logger.debug(`File was successfuly saved in ${savePath}`)
             });
+        } else {
+            this.logger.error(`Storing non locally is not supported`)
+            throw new HttpException(`Storing file non locally is not supported`, HttpStatus.BAD_REQUEST)
         }
     }
 
