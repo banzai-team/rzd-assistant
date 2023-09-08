@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { Speech, UploadedFile } from './audio.dto';
+import { Speech, Text, UploadedFile } from './audio.dto';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { FileStorageConfig } from 'src/config/configuration';
 import { join } from 'path';
+import { HttpService } from '@nestjs/axios';
+import { Observable, catchError, firstValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class AudioHandler {
@@ -13,12 +15,11 @@ export class AudioHandler {
     private readonly fileStorageConfig: FileStorageConfig;
 
     
-    constructor(private configService: ConfigService) {
+    constructor(private readonly http: HttpService, 
+        private configService: ConfigService) {
         this.s2tConfig = this.configService.get('s2t');
         this.t2sConfig = this.configService.get('t2s');
         this.fileStorageConfig = this.configService.get('fileStorage');
-        this.logger.debug(`Imported audio configuration. s2t::${JSON.stringify(this.s2tConfig)}, t2s::${JSON.stringify(this.t2sConfig)}`)
-
     }
 
     async persistAudio(file: UploadedFile) {
@@ -38,8 +39,19 @@ export class AudioHandler {
         }
     }
 
-    async s2t(speech: Speech) {
-
+    async s2t(speech: Speech): Promise<Text> {
+        this.logger.debug(`Transforming speech::${speech.path} into text...`);
+        return await firstValueFrom(this.http.post(`${this.s2tConfig.host}:${this.s2tConfig.port}/transform`, {
+            speech
+        })
+            .pipe(
+                map(res => ({text: res.data}))
+            )
+            .pipe(
+                catchError(() => {
+                    throw new HttpException('S2T service is not available', HttpStatus.SERVICE_UNAVAILABLE);
+                }),
+            ));
     }
 
     async t2s(text: Text) {    

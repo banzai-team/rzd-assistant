@@ -5,13 +5,12 @@ export interface UploadedFile {
 }
 
 export interface Speech {
-    buffer: Buffer;
-    filename: string;
-    mimetype: string;
-    meta: any;
+    path: string;
+    mimetype?: string;
+    meta?: any;
 }
 
 export interface Text {
     text: string;
-    meta: any;
+    meta?: any;
 }
