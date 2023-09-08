@@ -15,6 +15,19 @@ import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Recorder from './AudioRecorder';
 
 const Chat: React.FC = () => {
+    const messages: any = [];
+    
+    const sendMessage = (innerHtml: string) => {
+        console.log(innerHtml);
+        messages.push(<Message model={{
+            message: innerHtml,
+            sentTime: "just now",
+            sender: "Joe",
+            direction: "outgoing",
+            position: 'normal'
+        }}/>)
+    };
+    
     return <Box height="100vh">
         <MainContainer>
             <ChatContainer>
@@ -27,22 +40,16 @@ const Chat: React.FC = () => {
                     </ConversationHeader.Actions>
                 </ConversationHeader>
                 <MessageList>
-                    <Message model={{
-                        message: "Hello my friend",
-                        sentTime: "just now",
-                        sender: "Joe",
-                        direction: "incoming",
-                        position: 'normal'
-                    }}/>
-                    <Message model={{
+                    {messages}
+                    {/*<Message model={{
                         message: "Hello my friend",
                         sentTime: "just now",
                         sender: "Joe",
                         direction: "outgoing",
                         position: 'normal'
-                    }}/>
+                    }}/>*/}
                 </MessageList>
-                <MessageInput placeholder="Type message here"/>
+                <MessageInput placeholder="Type message here" onSend={sendMessage}/>
             </ChatContainer>
         </MainContainer>
     </Box>;
