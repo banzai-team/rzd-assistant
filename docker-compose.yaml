@@ -46,6 +46,9 @@ services:
 #      - rabbitmq
 #      - ml
     image: banzai/audio-service:v0.0.1
+    environment:
+      FILE_STORAGE_LOCAL: true
+      FILE_STORAGE_DIR: tmp
     build:
       context: backend/audio-service
       dockerfile: Dockerfile
