@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { Speech, Text, UploadedFile } from './audio.dto';
+import { SpeechDto, TextDto, UploadedFile } from './audio.dto';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { FileStorageConfig } from 'src/config/configuration';
@@ -21,7 +21,7 @@ export class AudioHandler {
         this.fileStorageConfig = this.configService.get('fileStorage');
     }
 
-    async s2t(file: UploadedFile): Promise<Text> {
+    async s2t(file: UploadedFile): Promise<TextDto> {
         if (this.fileStorageConfig.local) {
             const savePath = join(this.fileStorageConfig.dir, file.filename) 
             this.logger.debug(`Persiting file::${file.filename}.${file.mimetype} locally::${savePath}`)
@@ -42,7 +42,7 @@ export class AudioHandler {
         }
     }
 
-    private async s2tInternal(speech: Speech): Promise<Text> {
+    private async s2tInternal(speech: SpeechDto): Promise<TextDto> {
         this.logger.debug(`Transforming speech::${speech.path} into text. Performing request to::${this.s2tConfig.host}:${this.s2tConfig.port}/transform`);
         return await firstValueFrom(
             this.http.post(`http://${this.s2tConfig.host}:${this.s2tConfig.port}/transform`, JSON.stringify({"file_path": speech.path}), {
@@ -58,7 +58,7 @@ export class AudioHandler {
             ));
     }
 
-    async t2s(text: Text) {    
+    async t2s(text: TextDto) {    
 
     }
 }

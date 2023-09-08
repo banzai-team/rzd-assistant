@@ -4,13 +4,13 @@ export interface UploadedFile {
     mimetype: string;
 }
 
-export interface Speech {
+export interface SpeechDto {
     path: string;
     mimetype?: string;
     meta?: any;
 }
 
-export interface Text {
+export interface TextDto {
     text: string;
     meta?: any;
 }

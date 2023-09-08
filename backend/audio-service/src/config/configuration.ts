@@ -24,7 +24,7 @@ const fileStorageConfig: () => FileStorageConfig = () => ({
 const dbConfig = (): DataSourceOptions => ({
     type: 'postgres',
     dropSchema: false,
-    synchronize: false,
+    synchronize: true,
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
@@ -40,5 +40,6 @@ export default () => ({
     helperConfig: helperConfig(),
     t2s: t2sConfig(),
     s2t: s2tConfig(),
-    fileStorage: fileStorageConfig()
+    fileStorage: fileStorageConfig(),
+    db: dbConfig()
 });

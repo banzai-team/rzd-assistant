@@ -1,18 +1,17 @@
-import { Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Conversation {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: number;
 
     @OneToMany(m => Message, m => m.conversation)
     messages: Message[];
-
 }
 
 @Entity()
 export class Message {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: number;
 
     time: Date
