@@ -7,6 +7,7 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log'],
   });
   const configService: ConfigService = app.get(ConfigService);
+  app.enableCors();
   await app.listen(configService.get('port'));
 }
 bootstrap();
