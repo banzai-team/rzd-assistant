@@ -29,19 +29,40 @@ export class DocumentationParser {
         const tables = json['office:document']['office:body']['office:text']['table:table']
         const attachment = new Attachment()
         for (const table of tables) {
-            console.log(table['@_table:name'])
+            // console.log(table['@_table:name'])
             // console.log(table)
             const rows = table['table:table-row']
             for (const row of rows) {
-                const text = row['text:p']
-                if (text['text:span']) {
-
-                } else {
-
+                // console.log(row['table:table-cell'])
+                const cols = row['table:table-cell']
+                // console.log(cols)
+                if (cols.length) {
+                    const malfunctionNumber = cols[0]['text:p']['#text']
+                    const malfunctionName = cols[1]['text:p']['#text']
+                    const reasons = cols?.[2]?.['text:p']['#text']
+                    const solutions = cols?.[3]?.['text:p']
+                    console.log(cols?.[3]?.['text:p'])
+                    console.log(`malfunctionNumber::${malfunctionNumber}`)
+                    console.log(`malfunctionName::${malfunctionName}`)
+                    console.log(`reasons::${reasons}`)
+                    console.log(`solutions::${solutions}`)
+                    // const reasons = cols[1][]
+                    // for (const col of cols) {
+                    //     console.log(col['text:p'])
+                    // }
                 }
+                // const cols = row
+                // for (const col of row) {
+                //     console.log(col)
+                // }
+                // if (text['text:span']) {
+                    
+                // } else {
+
+                // }
             }
             
-            break
+            // break
             // for (const row of rows) {
             //     console.log(row)
             // }

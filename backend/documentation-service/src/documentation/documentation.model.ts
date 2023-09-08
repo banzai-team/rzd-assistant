@@ -1,15 +1,17 @@
 export class Attachment {
-    private id: number;
-    private name: string;
+    id: number;
+    name: string;
+    malfunctions: Malfunction[]
 }
 
 export class Malfunction {
-    private id: number;
-    private name: string;
+    id: number;
+    name: string;
+    causesAndSilutions: CauseAndSolution[]
 }
 
 export class CauseAndSolution {
-    private id: number;
-    private reason: string;
-    private solution: string;
+    id: number;
+    reason: string;
+    solution: string;
 }
