@@ -38,7 +38,7 @@ services:
       DB_PASSWORD: postgres
       RABBIT_HOST: rabbitmq
       RABBIT_PORT: 5672
-      RECOGNITION_HOST: predictor-ml
+      RECOGNITION_HOST: ml
       RECOGNITION_PORT: 3333
       FILE_STORAGE_LOCAL: true
       FILE_STORAGE_DIR: tmp
