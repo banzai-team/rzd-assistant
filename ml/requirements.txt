@@ -1,3 +1,0 @@
-fastapi~=0.68.2
-pydantic~=1.10.12
-huggingsound~=0.1.6
