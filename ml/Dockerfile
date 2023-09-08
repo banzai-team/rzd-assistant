@@ -4,11 +4,11 @@ WORKDIR /speech-app
 
 COPY ./requirements.txt /speech-app/requirements.txt
 
+RUN apt update && apt install -y libsndfile1
 RUN pip install --no-cache-dir --upgrade -r /speech-app/requirements.txt
 
 FROM base
 #
-COPY ./app /code/app
-
+ADD ./app ./app
 #
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3333"]
