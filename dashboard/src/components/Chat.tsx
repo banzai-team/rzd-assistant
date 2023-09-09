@@ -16,18 +16,40 @@ import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Recorder from './AudioRecorder';
 import logo from '../images/rzd.jpeg';
 import {useMutation} from 'react-query';
-import {createChat} from '../domain/api';
+import {createChat, getConversationHistory} from '../domain/api';
 import {STORAGE_KEYS, trainsTypes} from '../objects';
 
 const Chat: React.FC = () => {
     const [train, setTrain] = React.useState(trainsTypes[0].value);
+    const [chatHistory, setChatHistory] = React.useState([]);
+    
+    const chatId = localStorage.getItem(STORAGE_KEYS.CHAT_ID);
+    
+    React.useEffect(() => {
+        chatId && getChatHistory.mutate(chatId);
+    }, []);
+    
     const create = useMutation(createChat, {
         onSuccess: (res) => {
             localStorage.setItem(STORAGE_KEYS.CHAT_ID, res.data.id);
         }
     });
 
+    const getChatHistory = useMutation(getConversationHistory, {
+        onSuccess: (res) => {
+            setChatHistory(res.data.content);
+        }
+    });
+
     const onCreate = () => create.mutate(train);
+    
+    /*const messages = chatHistory.map(el => ({
+        message: "Hello my friend",
+        sentTime: "just now",
+        sender: "Joe",
+        direction: "incoming",
+        position: "normal"
+    }))*/
     
     const messages = [
         {
@@ -86,7 +108,7 @@ const Chat: React.FC = () => {
                 </ConversationHeader>
                 <MessageList>
                 {
-                    localStorage.getItem(STORAGE_KEYS.CHAT_ID) ? (
+                    chatId ? (
                         <>
                                 {
                                     messages.map((message, key) => (
@@ -135,7 +157,7 @@ const Chat: React.FC = () => {
                 </MessageList>
                 {/*<MessageInput placeholder="Type message here" attachButton={false}/>*/}
                 {
-                    localStorage.getItem(STORAGE_KEYS.CHAT_ID) ? (
+                    chatId ? (
                         <Flex
                             // @ts-ignore
                             as="MessageInput"

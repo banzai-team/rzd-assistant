@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { config } from "../config/config";
 
-export type SendRecordPayload = { file: any };
+export type SendRecordPayload = { file: any, id: string };
 
 export function sendRecord(payload: SendRecordPayload) {
   const form = new FormData();
 
   form.append("file", payload.file);
 
-  return axios.post(`${config.apiUrl}/conversation/upload `, form, {
+  return axios.post(`${config.apiUrl}/conversation/${payload.id}/upload `, form, {
     headers: {
       'Content-Type': `multipart/form-data;`,
     },
@@ -29,6 +29,10 @@ export function createChat(payload: string) {
       'Content-Type': `multipart/form-data;`,
     },
   });
+}
+
+export function getConversationHistory(id: string | undefined) {
+  return axios.get(`${config.apiUrl}/conversation/${id}/messages?offset=0&size=1000`);
 }
 
 
