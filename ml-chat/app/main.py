@@ -30,8 +30,7 @@ def speech_to_text(item: Item):
 
 @app.post("/rule_based_text")
 def rule_based_text(item: Item):
-    print(os.listdir('../ml-chat/tfidf_data'))
     item.context = [item.queue] + item.context
     item.context.reverse()
-    result = rule_based_process(item.context, item.train_id, '../ml-chat/tfidf_data')
+    result = rule_based_process(item.context, item.train_id, 'tfidf_data')
     return {"result": result}

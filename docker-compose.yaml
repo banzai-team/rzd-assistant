@@ -57,7 +57,9 @@ services:
       - '3000:3000'
       - '3002:3001'
   ml:
+    restart: always
     volumes:
+      - app:/root/.cache
       - /tmp:/tmp
     image: banzai/predictor-ml:v0.0.1
     build:
