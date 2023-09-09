@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/loader.css"
 
 import {Box} from "@chakra-ui/react";
-import train from '../images/train.svg';
+import train from '../images/longTrain.svg';
 
 const Loader: React.FC = () => {
     return (
