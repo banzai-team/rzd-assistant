@@ -2,11 +2,23 @@ import axios from 'axios';
 import { config } from "../config/config";
 
 export type SendRecordPayload = { file: any, id: string };
+export type SendMessagePayload = { text: any, id: string | null };
 
 export function sendRecord(payload: SendRecordPayload) {
   const form = new FormData();
 
   form.append("file", payload.file);
+
+  return axios.post(`${config.apiUrl}/conversation/${payload.id}/upload `, form, {
+    headers: {
+      'Content-Type': `multipart/form-data;`,
+    },
+  });
+}
+export function sendMessage(payload: SendMessagePayload) {
+  const form = new FormData();
+
+  form.append("text", payload.text);
 
   return axios.post(`${config.apiUrl}/conversation/${payload.id}/upload `, form, {
     headers: {

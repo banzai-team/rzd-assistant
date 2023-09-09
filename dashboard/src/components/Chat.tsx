@@ -15,7 +15,7 @@ import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Recorder from './AudioRecorder';
 import logo from '../images/rzd.jpg';
 import {useMutation} from 'react-query';
-import {createChat, getConversationHistory} from '../domain/api';
+import {createChat, getConversationHistory, sendMessage, sendRecord} from '../domain/api';
 import {STORAGE_KEYS, trainsTypes} from '../objects';
 
 const Chat: React.FC = () => {
@@ -40,8 +40,15 @@ const Chat: React.FC = () => {
         }
     });
 
+    const sendText = useMutation(sendMessage, {
+        onSuccess: (data) => {
+            console.log('File sent')
+        }
+    });
+
     const onCreate = () => create.mutate(train);
-    
+    const onSend = (textContent: string) => sendText.mutate({text: textContent, id: chatId});
+
     /*const messages = chatHistory.map(el => ({
         message: "Hello my friend",
         sentTime: "just now",
@@ -164,7 +171,12 @@ const Chat: React.FC = () => {
                             borderTop="1px solid #d1dbe3"
                             alignItems="end"
                         >
-                            <MessageInput placeholder="Type message here" attachButton={false} style={{flex: "1", borderTop: "none"}}/>
+                            <MessageInput
+                                placeholder="Type message here"
+                                attachButton={false}
+                                style={{flex: "1", borderTop: "none"}}
+                                onSend={onSend}
+                            />
                             <Box p={1}><Recorder /></Box>
                         </Flex>
                     ) : null
