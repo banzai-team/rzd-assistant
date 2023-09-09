@@ -16,7 +16,7 @@ export class MessagePipelineService {
     async pipe(msg: MessageRequest): Promise<any> {
         const savedFile = await this.uploadMessage.saveFile(msg.file);
         const text = await this.s2t.s2t(savedFile);
-        return await this.createMessage.createMessage(msg.conversationId, msg.source, text);
+        return await this.createMessage.createMessage(msg.conversationId, msg.source, text, savedFile);
     }
 
 

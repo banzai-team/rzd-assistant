@@ -9,6 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceOptions } from 'typeorm';
 import { MessagePipelineModule } from './message-pipeline/message-pipeline.module';
 import { WebsocketModule } from './app/websocket.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,6 +27,12 @@ import { WebsocketModule } from './app/websocket.module';
     }),
     MessagePipelineModule,
     WebsocketModule,
+    ServeStaticModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ([{
+        rootPath: configService.get('fileStorage').dir
+      }]),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Conversation, Message } from './conversation.entity';
-import { TextDto } from 'src/audio/audio.dto';
+import { SavedFile, TextDto } from 'src/audio/audio.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConversationRequest, Page, PageableQuery } from './conversation.dto';
@@ -23,7 +23,7 @@ export class ConversationService {
         return conv;
     }
 
-    async createMessage(conversationId: number, source: string, text: TextDto) {
+    async createMessage(conversationId: number, source: string, text: TextDto, file: SavedFile) {
         this.logger.debug(`Creating message...`)
         const conversation = await this.conversationRepository.findOne({
             where: {
@@ -39,6 +39,7 @@ export class ConversationService {
         msg.time = new Date();
         msg.source = source;
         msg.conversation = conversation;
+        msg.audio = file.path;
         await this.messageRepository.save(msg);
         this.logger.debug(`Message was created`);
         return msg;
