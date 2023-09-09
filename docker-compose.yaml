@@ -27,6 +27,8 @@ services:
     ports:
       - '5432:5432'
   backend:
+    depends_on:
+      - postgres
     volumes:
       - /tmp:/tmp
 #    command:
