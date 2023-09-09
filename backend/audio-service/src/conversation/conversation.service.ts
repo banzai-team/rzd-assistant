@@ -18,6 +18,7 @@ export class ConversationService {
     async createConversation(create: CreateConversationRequest) {
         this.logger.debug(`Creating conversation...`)
         let conv = new Conversation();
+        conv.train = create.train;
         conv = await this.conversationRepository.save(conv);
         this.logger.debug(`Conversation was created`)
         return conv;

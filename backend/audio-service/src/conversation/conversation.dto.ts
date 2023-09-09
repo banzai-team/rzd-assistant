@@ -1,5 +1,5 @@
 export interface CreateConversationRequest {
-    
+    train: string;
 }
 
 export interface PageableQuery {
