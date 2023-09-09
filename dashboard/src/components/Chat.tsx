@@ -17,11 +17,12 @@ import Recorder from './AudioRecorder';
 import logo from '../images/rzd.jpeg';
 import {useMutation} from 'react-query';
 import {createChat} from '../domain/api';
+import {STORAGE_KEYS} from '../objects';
 
 const Chat: React.FC = () => {
     const create = useMutation(createChat, {
-        onSuccess: (data) => {
-            console.log('Chat created')
+        onSuccess: (res) => {
+            localStorage.setItem(STORAGE_KEYS.CHAT_ID, res.data.id);
         }
     });
     
