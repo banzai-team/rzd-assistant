@@ -76,4 +76,11 @@ export class ConversationController {
     async patchMessage(@Param('id', ParseIntPipe) messageId: number, @Body() message: Message) {
         return await this.conversationService.patchMessage(messageId, message);
     }
+
+    @Patch('message/:id')
+    async patchMessageText(@Param('id', ParseIntPipe) messageId: number, @Body() content: string) {\
+        const msg = new Message();
+        msg.content = content
+        return await this.conversationService.patchMessage(messageId, msg);
+    }
 }
