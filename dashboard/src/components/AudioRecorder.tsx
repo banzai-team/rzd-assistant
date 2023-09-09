@@ -15,7 +15,7 @@ const Recorder: React.FC = () => {
     });
 
     if (send.isLoading) {
-        return <Spinner width="30px" height="30px" ml="10px" />
+        return <Spinner width="30px" height="30px" ml="10px" color="purple" />
     };
 
     return <React.StrictMode>

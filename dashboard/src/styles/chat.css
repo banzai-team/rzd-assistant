@@ -36,3 +36,7 @@
 .cs-button.cs-button--send {
     color: #8d2ce1;
 }
+
+.audio-recorder {
+    background: #E6E0F1 !important;
+}

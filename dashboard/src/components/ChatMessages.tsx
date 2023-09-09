@@ -7,7 +7,7 @@ import { Message, MessageList } from '@chatscope/chat-ui-kit-react';
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import { getConversationHistory } from '../domain/api';
 import Loader from "./Loader";
-import {Center, Link, Text} from "@chakra-ui/react";
+import {Center, Link, Text, Spinner} from "@chakra-ui/react";
 import {config} from "../config/config";
 
 
@@ -18,7 +18,7 @@ const ChatMessages: React.FC<{ chatId: string }> = ({ chatId }) => {
         return (
             <MessageList.Content>
                 <Center flexDirection="column">
-                    <Text fontSize="xl" align="center" mt={10} color='purple'> Load Chat </Text>
+                    <Text fontSize="xl" align="center" mt={10} color='purple'> Загружаем чат</Text>
                     <Loader/>
                 </Center>
             </MessageList.Content>
@@ -55,6 +55,11 @@ const ChatMessages: React.FC<{ chatId: string }> = ({ chatId }) => {
                     // @ts-ignore
                     <Message key={`message-${key}`} model={message}>
                         <Message.CustomContent>
+                            {!message.audio && !message.message && message.direction ===  "incoming"
+                                // ? <Spinner color="purple"/>
+                                ? <Spinner color="purple" ml={5} mr={5}/>
+                                : null
+                            }
                             {message.audio ? (
                                 <Link
                                     display="block"
