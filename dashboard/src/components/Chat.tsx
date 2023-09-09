@@ -54,7 +54,7 @@ const Chat: React.FC = () => {
             <ChatContainer>
                 <ConversationHeader className="chat_header">
                     <Avatar src={logo} name="Your Assistant" className="main_avatar" />
-                    <ConversationHeader.Content userName="Your Assistant" info="Online" className="transparent" />
+                    <ConversationHeader.Content userName="Ваш ассистент" info="Online" className="transparent" />
                     {
                         chatId && (
                             <ConversationHeader.Actions className="transparent">
@@ -80,7 +80,7 @@ const Chat: React.FC = () => {
                                 <Center>
                                     <Card p={10} mt={10} width={400}>
                                         <Text fontSize="xl" align="center" color='purple'>
-                                            Please select type of train
+                                            Выбирите тип поезда
                                         </Text>
                                         <Select
                                             colorScheme='purple'
@@ -103,7 +103,7 @@ const Chat: React.FC = () => {
                                             variant='outline'
                                             onClick={onCreate}
                                         >
-                                            Start chat
+                                            Начать чат
                                         </Button>
                                     </Card>
                                 </Center>
@@ -124,7 +124,7 @@ const Chat: React.FC = () => {
                         >
                             <MessageInput
                               contentEditable={false}
-                                placeholder="Type message here"
+                                placeholder="Введите сообщение . . ."
                                 attachButton={false}
                                 style={{flex: "1", borderTop: "none"}}
                                 onSend={onSend}
