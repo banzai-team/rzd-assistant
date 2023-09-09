@@ -1,5 +1,8 @@
+import { ModelType } from "src/bot-interaction/bot-interaction.enum";
+
 export interface CreateConversationRequest {
     train: string;
+    modelType: ModelType;
 }
 
 export interface PageableQuery {

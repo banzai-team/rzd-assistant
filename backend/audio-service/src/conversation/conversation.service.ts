@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Conversation, Message } from './conversation.entity';
-import { SavedFile, TextDto } from 'src/audio/audio.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConversationRequest, Page, PageableQuery } from './conversation.dto';
+import { ModelType } from 'src/bot-interaction/bot-interaction.enum';
 
 @Injectable()
 export class ConversationService {
@@ -19,6 +19,7 @@ export class ConversationService {
         this.logger.debug(`Creating conversation...`)
         let conv = new Conversation();
         conv.train = create.train;
+        conv.model = create.modelType || ModelType.RULE_BASED_TEXT_MODEL;
         conv = await this.conversationRepository.save(conv);
         this.logger.debug(`Conversation was created`)
         return conv;

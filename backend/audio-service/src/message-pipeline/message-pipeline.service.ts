@@ -55,11 +55,14 @@ export class MessagePipelineService {
 
     private async commonChain(conversation: Conversation, message: Message, context: Page) {
         this.logger.debug(`Sending message::${message.content}, context of length::${context.size}`)
-        const botResponse = await this.botInteraction.askBot({
-            query: message.content,
-            train_id: conversation.train,
-            context: context.content.map(m => m.content)
-        });
+        const botResponse = await this.botInteraction.askBot(
+            conversation.model,
+            {
+                query: message.content,
+                train_id: conversation.train,
+                context: context.content.map(m => m.content)
+            }
+        );
         this.logger.debug(`Bot responded::${JSON.stringify(botResponse)}, model::${conversation.train}`);
         if (botResponse.ok) {
             return await this.createMessage.createMessage(conversation.id, 'bot', botResponse.message);

@@ -1,3 +1,4 @@
+import { ModelType } from "src/bot-interaction/bot-interaction.enum";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -11,7 +12,7 @@ export class Conversation {
     @Column({
         nullable: true
     })
-    model: string;
+    model: ModelType;
 
     @OneToMany(m => Message, m => m.conversation)
     messages: Message[];
