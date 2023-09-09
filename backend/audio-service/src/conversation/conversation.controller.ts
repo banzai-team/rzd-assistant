@@ -46,9 +46,14 @@ export class ConversationController {
         return await this.conversationService.createConversation(create);
     }
 
+    @Get('list')
+    async conversations() {
+        return await this.conversationService.getConversations();
+    }
+
     @Get(':id')
     async loadConversation(@Param('id', ParseIntPipe) id: number) {
-        
+        return this.conversationService.getConversationById(id);
     }
 
     @Get('/:id/messages')
