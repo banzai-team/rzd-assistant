@@ -9,9 +9,9 @@ app = FastAPI()
 model = SpeechRecognitionModel("jonatasgrosman/wav2vec2-large-xlsr-53-russian")
 
 
-@app.get("/")
+@app.get("/health")
 def read_root():
-    return {"Hello": "World"}
+    return {"ok": 200}
 
 
 class Item(BaseModel):
