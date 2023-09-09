@@ -1,7 +1,8 @@
 export interface BotRequest {
+    // [new -> old]
     context: string[];
     model: string;
-    message: string;
+    query: string;
 }
 
 export interface BotResponse {
