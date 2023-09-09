@@ -58,7 +58,7 @@ export class MessagePipelineService {
         this.logger.debug(`Sending message::${message.content}, context of length::${context.size}`)
         const botResponse = await this.botInteraction.askBot({
             query: message.content,
-            train_id: conversation.train ?? "2М62",
+            train_id: conversation.train,
             context: context.content.map(m => m.content)
         });
         this.logger.debug(`Bot responded::${JSON.stringify(botResponse)}, model::${conversation.train}`);

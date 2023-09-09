@@ -22,7 +22,10 @@ export class BotInteractionService {
                 JSON.stringify(request), {
                     headers: {'Content-Type': 'application/json'}
                 }));
-            return resp.data;
+            return {
+                ok: true,
+                message: resp.data.result
+            };
         } catch(e) {
             this.logger.error(`An error occured when asking chat bot`, e)
             return {
