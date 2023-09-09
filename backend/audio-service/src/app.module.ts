@@ -11,6 +11,7 @@ import { MessagePipelineModule } from './message-pipeline/message-pipeline.modul
 import { WebsocketModule } from './app/websocket.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { BotInteractionModule } from './bot-interaction/bot-interaction.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { join } from 'path';
       }]),
       inject: [ConfigService],
     }),
+    BotInteractionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
