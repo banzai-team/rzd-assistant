@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConversationService } from 'src/conversation/conversation.service';
 import { Page } from 'src/conversation/conversation.dto';
+import { ModelType } from 'src/bot-interaction/bot-interaction.enum';
 
 @Injectable()
 export class MessagePipelineService {
@@ -54,7 +55,19 @@ export class MessagePipelineService {
     }
 
     private async commonChain(conversation: Conversation, message: Message, context: Page) {
-        this.logger.debug(`Sending message::${message.content}, context of length::${context.size}`)
+        this.logger.debug(`Sending message::${message.content}, context of length::${context.size}`);
+        if (conversation.model == ModelType.DEFAULT_TEXT_MODEL) {
+            await this.handleDefaultModel();
+        } else {
+            await this.handleRuleBasedModel();
+        }
+        
+    }
+
+    /**
+     * Returns complete message at once
+     */
+    private async handleRuleBasedModel(conversation: Conversation, message: Message, context: Page) {
         const botResponse = await this.botInteraction.askBot(
             conversation.model,
             {
@@ -69,5 +82,23 @@ export class MessagePipelineService {
         } else {
             throw new HttpException(`An error occured::${botResponse.error}`, HttpStatus.INTERNAL_SERVER_ERROR)
         }
+    } 
+
+    /**
+     * Creates blank response message in db. The message perioducaly gets updated
+     */
+    private async handleDefaultModel(conversation: Conversation, message: Message, context: Page) {
+        const preparedResponseMessage = await this.createMessage.createMessage(conversation.id, message.source, '');
+        this.logger.debug(`Created blank response message::${JSON.stringify(preparedResponseMessage)} to be updated in the future`);
+        // response is ignored
+        await this.botInteraction.askBot(
+            conversation.model,
+            {
+                query: message.content,
+                train_id: conversation.train,
+                context: context.content.map(m => m.content),
+                message_id: preparedResponseMessage.id
+            }
+        );
     }
 }

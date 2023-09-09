@@ -3,6 +3,7 @@ export interface BotRequest {
     context: string[];
     train_id: string;
     query: string;
+    message_id?: number;
 }
 
 export interface BotResponse {

@@ -26,12 +26,12 @@ export class BotInteractionService {
                 port = this.ruleModelConfig.port;
                 endpoint = this.ruleModelConfig.endpoint;
             } else {
-                this.logger.debug(`Using default model for asking...`)
+                this.logger.debug(`Using default model for asking...`);
                 host = this.defaultModelConfig.host;
                 port = this.defaultModelConfig.port;
                 endpoint = this.defaultModelConfig.endpoint;
             }
-            this.logger.debug(`Making request to ask chat bot on http://${host}:${port}/${endpoint}...`)
+            this.logger.debug(`Making request to ask chat bot on http://${host}:${port}/${endpoint}...`);
             const resp = await firstValueFrom(
                 this.http.post(`http://${host}:${port}/${endpoint}`, 
                 request, { headers: {'Content-Type': 'application/json'}}));
