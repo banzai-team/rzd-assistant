@@ -5,13 +5,17 @@ from huggingface_hub import snapshot_download
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.document_loaders import TextLoader
-from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from llama_cpp import Llama
 import requests
 
 # from app.db.db import pg_db
+
+
+embedder_name = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+embeddings = SentenceTransformerEmbeddings(model_name=embedder_name)
 
 repo_name = "IlyaGusev/saiga2_13b_gguf"
 model_name = "ggml-model-q4_K.gguf"
@@ -32,8 +36,6 @@ model = Llama(
     # callback_manager=callback_manager,
     verbose=True,
 )
-
-embedder_name = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
 
 SYSTEM_PROMPT = "Ты — Сайга, русскоязычный автоматический ассистент. Ты разговариваешь с людьми и помогаешь им."
 SYSTEM_TOKEN = 1788
@@ -72,7 +74,9 @@ def process_text(text):
 
 
 def load_db(file_path):
-    embeddings = HuggingFaceEmbeddings(model_name=embedder_name)
+    logging.info("loading embeddings from hugging face")
+
+    logging.info("loading file")
     loader = TextLoader(file_path=file_path)
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=400, chunk_overlap=100)
@@ -84,6 +88,7 @@ def load_db(file_path):
             continue
         fixed_documents.append(doc)
 
+    logging.info("building search db")
     docsearch = Chroma.from_documents(fixed_documents, embeddings)
     return docsearch
 
@@ -103,7 +108,6 @@ def process(query: str, chat_history: [str], message_id: int):
     db = load_db(db_path)
     logging.info("db: loaded")
     retrieved_docs = retrieve(chat_history, db, [], 5)
-
 
     last_user_message = chat_history[-1][0]
     if retrieved_docs:
@@ -134,11 +138,12 @@ def process(query: str, chat_history: [str], message_id: int):
     tokens.extend(message_tokens)
 
     partial_text = "еуыеыеые"
-    requests.patch(f"""{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
+    # requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
     for i, token in enumerate(generator):
         if token == model.token_eos() or (max_new_tokens is not None and i >= max_new_tokens):
             break
         partial_text += model.detokenize([token]).decode("utf-8", "ignore")
-        requests.patch(f"""{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
+        logging.info(partial_text)
+        # requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
 
     return partial_text

@@ -48,7 +48,7 @@ services:
       RABBIT_PORT: 5672
       RECOGNITION_HOST: ml
       RECOGNITION_PORT: 3333
-      FILE_STORAGE_LOCAL: true
+      FILE_STORAGE_LOCAL: "true"
       FILE_STORAGE_DIR: /tmp
       RULE_MODEL_HOST: ml-chat
       RULE_MODEL_PORT: 4444
@@ -77,11 +77,8 @@ services:
   ml-chat:
     restart: always
     environment:
-      DB_NAME: conversation
-      DB_HOST: postgres
-      DB_PORT: "5432"
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
+      BACKEND_HOST: backend
+      BACKEND_PORT: 3000
     volumes:
       - /tmp:/tmp
       - app:/root/.cache
