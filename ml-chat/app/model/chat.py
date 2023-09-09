@@ -13,13 +13,13 @@ repo_name = "IlyaGusev/saiga2_13b_gguf"
 model_name = "ggml-model-q4_K.gguf"
 
 callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
-snapshot_download(repo_id=repo_name, local_dir=".", allow_patterns=model_name)
+snapshot_download(repo_id=repo_name, local_dir="./data/", allow_patterns=model_name)
 n_gpu_layers = 1  # Metal set to 1 is enough.
 n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip.
+model_path = f"./data/{model_name}"
 
-# Make sure the model path is correct for your system!
 model = Llama(
-    model_path=model_name,
+    model_path=model_path,
     n_gpu_layers=n_gpu_layers,
     n_batch=n_batch,
     n_ctx=2048,
@@ -93,7 +93,7 @@ def retrieve(history, db, retrieved_docs, k_documents):
 
 
 def process(query: str, chat_history: [str]):
-    chat_history=[[query]]
+    chat_history = [[query]]
     logging.info("db: started to load")
     db = load_db("/Users/jamakase/Projects/banzai-team/rzd-assistant/ml-chat/app/model/test.txt")
     logging.info("db: loaded")

@@ -1,8 +1,8 @@
 name: ML chat service CI workflow
 on:
   push:
-#    paths:
-#      - 'ml-chat/**'
+    paths:
+      - 'ml-chat/**'
     branches:
       - master
   pull_request:
