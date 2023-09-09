@@ -22,5 +22,6 @@ RUN UNAME_M=arm64 UNAME_p=arm LLAMA_NO_METAL=1 pip install -r /app/requirements.
 FROM base
 #
 ADD ./app ./app
+ADD ./data ./data
 #
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "4444"]

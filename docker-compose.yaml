@@ -65,8 +65,9 @@ services:
       - '3001:3333'
   ml-chat:
     volumes:
-      - ./tmp:/tmp
+      - /tmp:/tmp
       - app:/root/.cache
+      - ./data:/data
     image: banzai/predictor-ml-chat:v0.0.1
     build:
       context: ml-chat

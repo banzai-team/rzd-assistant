@@ -17,6 +17,7 @@ snapshot_download(repo_id=repo_name, local_dir="./data/", allow_patterns=model_n
 n_gpu_layers = 1  # Metal set to 1 is enough.
 n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip.
 model_path = f"./data/{model_name}"
+db_path = "./data/test.txt"
 
 model = Llama(
     model_path=model_path,
@@ -95,7 +96,7 @@ def retrieve(history, db, retrieved_docs, k_documents):
 def process(query: str, chat_history: [str]):
     chat_history = [[query]]
     logging.info("db: started to load")
-    db = load_db("/Users/jamakase/Projects/banzai-team/rzd-assistant/ml-chat/app/model/test.txt")
+    db = load_db(db_path)
     logging.info("db: loaded")
     retrieved_docs = retrieve(chat_history, db, [], 5)
     last_user_message = chat_history[-1][0]
