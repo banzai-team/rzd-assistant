@@ -42,7 +42,7 @@ export class ConversationController {
     }
 
     @Post('create')
-    async create(create: CreateConversationRequest) {
+    async create(@Body() create: CreateConversationRequest) {
         return await this.conversationService.createConversation(create);
     }
 

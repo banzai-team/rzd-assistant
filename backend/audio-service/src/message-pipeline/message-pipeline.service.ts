@@ -60,7 +60,7 @@ export class MessagePipelineService {
         if (botResponse.ok) {
             return await this.createMessage.createMessage(conversation.id, 'bot', { text: botResponse.message });
         } else {
-            throw new HttpException(botResponse.errors.join(','), HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new HttpException(`An error occured::${botResponse.error}`, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 }

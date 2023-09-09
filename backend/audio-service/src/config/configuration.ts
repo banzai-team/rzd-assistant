@@ -42,7 +42,7 @@ const dbConfig = (): DataSourceOptions => ({
   
 export default () => ({
     port: parseInt(process.env.PORT, 10) || 3000,
-    helperConfig: helperConfig(),
+    bot: helperConfig(),
     t2s: t2sConfig(),
     s2t: s2tConfig(),
     fileStorage: fileStorageConfig(),
