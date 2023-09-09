@@ -1,6 +1,5 @@
 import { Controller, Get, Inject, Logger, Param, ParseIntPipe, Post, Query, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AudioHandler } from 'src/audio/audio.handler';
 import { ConversationService } from './conversation.service';
 import { CreateConversationRequest } from './conversation.dto';
 import { MessagePipelineService } from 'src/message-pipeline/message-pipeline.service';

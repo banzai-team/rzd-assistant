@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AudioHandler } from './audio.handler';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { S2T } from './links/s2t.link';
@@ -9,7 +8,7 @@ import { S2T } from './links/s2t.link';
     ConfigModule, 
     HttpModule
   ],
-  providers: [AudioHandler, S2T],
-  exports: [AudioHandler, S2T]
+  providers: [S2T],
+  exports: [S2T]
 })
 export class AudioModule {}
