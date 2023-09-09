@@ -19,6 +19,10 @@ export class Message {
     source: string;
     @Column()
     content: string;
+    @Column({
+        nullable: true
+    })
+    audio: string;
     @ManyToOne(c => Conversation, c => c.messages)
     conversation: Conversation;
 }
