@@ -4,6 +4,10 @@ export interface UploadedFile {
     mimetype: string;
 }
 
+export interface SavedFile {
+    path: string;
+}
+
 export interface SpeechDto {
     path: string;
     mimetype?: string;
