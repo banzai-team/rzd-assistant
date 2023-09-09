@@ -1,7 +1,7 @@
 import React from 'react';
 import "../styles/chat.css"
 
-import {Box} from '@chakra-ui/react';
+import {Box, Flex} from '@chakra-ui/react';
 import {
     ChatContainer,
     MainContainer,
@@ -68,10 +68,9 @@ const Chat: React.FC = () => {
                 <ConversationHeader className="chat_header">
                     <Avatar src={logo} name="Your Assistant" className="main_avatar" />
                     <ConversationHeader.Content userName="Your Assistant" info="Active 10 mins ago" className="transparent" />
-                    <ConversationHeader.Actions className="transparent">
-                        {/*<InfoButton onClick={async (values) => send.mutate({ file: values.files[0] })}/>*/}
-                        <Recorder />
-                    </ConversationHeader.Actions>
+                    {/*<ConversationHeader.Actions className="transparent">*/}
+                    {/*    <Recorder />*/}
+                    {/*</ConversationHeader.Actions>*/}
                 </ConversationHeader>
                 <MessageList>
                     {
@@ -82,7 +81,16 @@ const Chat: React.FC = () => {
                         ))
                     }
                 </MessageList>
-                <MessageInput placeholder="Type message here" attachButton={false}/>
+                {/*<MessageInput placeholder="Type message here" attachButton={false}/>*/}
+                {/*@ts-ignore*/}
+                <Flex as="MessageInput"
+                      width="100%"
+                      borderTop="1px solid #d1dbe3"
+                      alignItems="end"
+                >
+                    <MessageInput placeholder="Type message here" attachButton={false} style={{flex: "1", borderTop: "none"}}/>
+                    <Box p={1}><Recorder /></Box>
+                </Flex>
             </ChatContainer>
         </MainContainer>
     </Box>;
