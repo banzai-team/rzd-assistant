@@ -16,9 +16,9 @@ export class BotInteractionService {
 
     async askBot(request: BotRequest): Promise<BotResponse> | never {
         try {
-            this.logger.debug(`Making request to ask chat bot on http://${this.botConfig.host}:${this.botConfig.port}/chat...`)
+            this.logger.debug(`Making request to ask chat bot on http://${this.botConfig.host}:${this.botConfig.port}/rule_based_text...`)
             const resp = await firstValueFrom(
-                this.http.post(`http://${this.botConfig.host}:${this.botConfig.port}/text`, 
+                this.http.post(`http://${this.botConfig.host}:${this.botConfig.port}/rule_based_text`, 
                 JSON.stringify(request), {
                     headers: {'Content-Type': 'application/json'}
                 }));
