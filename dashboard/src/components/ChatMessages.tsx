@@ -12,7 +12,7 @@ import {config} from "../config/config";
 
 
 const ChatMessages: React.FC<{ chatId: string }> = ({ chatId }) => {
-    const { data, isLoading } = useQuery([], () => getConversationHistory(chatId));
+    const { data, isLoading } = useQuery([], () => getConversationHistory(chatId),{refetchInterval: 1000});
 
     if (isLoading) {
         return (
