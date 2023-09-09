@@ -61,5 +61,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3001:3333'
+  ml-chat:
+    volumes:
+    - /.:/.
+    image: banzai/predictor-ml-chat:v0.0.1
+    build:
+      context: ml-chat
+      dockerfile: Dockerfile
+    ports:
+      - '5001:3333'
 volumes:
   app:

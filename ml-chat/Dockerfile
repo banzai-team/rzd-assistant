@@ -1,11 +1,10 @@
 FROM python:3.9 as base
 
-WORKDIR /speech-app
+WORKDIR /app
 
-COPY ./requirements.txt /speech-app/requirements.txt
+COPY ./requirements.txt /app/requirements.txt
 
-RUN apt update && apt install -y libsndfile1
-RUN pip install --no-cache-dir --upgrade -r /speech-app/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 FROM base
 #
