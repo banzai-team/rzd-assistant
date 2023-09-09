@@ -62,8 +62,8 @@ services:
     ports:
       - '3001:3333'
   ml-chat:
-    volumes:
-    - /.:/.
+#    volumes:
+#      - app:
     image: banzai/predictor-ml-chat:v0.0.1
     build:
       context: ml-chat

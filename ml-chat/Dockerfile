@@ -17,7 +17,7 @@ WORKDIR /app
 
 COPY ./requirements.txt /app/requirements.txt
 
-RUN pip install -r /app/requirements.txt
+RUN UNAME_M=arm64 UNAME_p=arm LLAMA_NO_METAL=1 pip install -r /app/requirements.txt
 
 FROM base
 #
