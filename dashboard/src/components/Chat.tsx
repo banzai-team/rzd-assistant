@@ -50,6 +50,7 @@ const Chat: React.FC = () => {
                             <ConversationHeader.Actions className="transparent">
                                 <IconButton
                                     isRound={true}
+                                    colorScheme='blue'
                                     size="sm"
                                     aria-label="close"
                                     icon={<AiOutlineClose />}
