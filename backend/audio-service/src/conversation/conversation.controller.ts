@@ -1,8 +1,9 @@
-import { Controller, Get, Inject, Logger, Param, ParseIntPipe, Post, Query, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Logger, Param, ParseIntPipe, Post, Query, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ConversationService } from './conversation.service';
 import { CreateConversationRequest } from './conversation.dto';
 import { MessagePipelineService } from 'src/message-pipeline/message-pipeline.service';
+import { TextDto } from 'src/audio/audio.dto';
 
 
 @Controller('conversation')
@@ -20,15 +21,24 @@ export class ConversationController {
         @Param('id', ParseIntPipe) conversationId: number,
         @UploadedFile() file: Express.Multer.File,
         ) {
-            const res = await this.messagePipeline.pipe({
+            const res = await this.messagePipeline.fileChain(
                 conversationId,
-                file: {
-                        buffer: file.buffer,
-                        filename: file.originalname,
-                        mimetype: file.mimetype,
-                },
-                source: 'user'
-            });
+                {
+                    file: {
+                            buffer: file.buffer,
+                            filename: file.originalname,
+                            mimetype: file.mimetype,
+                    },
+                    source: 'user'
+                });
+            return res
+    }
+
+    @Post('/:id/text')
+    async rawText(
+        @Param('id', ParseIntPipe) conversationId: number,
+        @Body() text: TextDto) {
+            const res = await this.messagePipeline.textChain(conversationId, text);
             return res
     }
 
