@@ -5,5 +5,7 @@ export interface BotRequest {
 }
 
 export interface BotResponse {
-    
+    ok: boolean;
+    message?: string;
+    errors?: string[]
 }

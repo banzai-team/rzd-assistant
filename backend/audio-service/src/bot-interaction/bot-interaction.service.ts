@@ -14,11 +14,22 @@ export class BotInteractionService {
     }
 
     async askBot(request: BotRequest): Promise<BotResponse> | never {
-        const resp = await firstValueFrom(
-            this.http.post(`http://${this.botConfig.host}:${this.botConfig.port}/chat`, 
-            JSON.stringify(request), {
-                headers: {'Content-Type': 'application/json'}
-            }));
-        return resp.data;
+        try {
+            const resp = await firstValueFrom(
+                this.http.post(`http://${this.botConfig.host}:${this.botConfig.port}/chat`, 
+                JSON.stringify(request), {
+                    headers: {'Content-Type': 'application/json'}
+                }));
+            return {
+                ok: true,
+                message: resp.data
+            };
+        } catch(e) {
+            return {
+                ok: false,
+                errors: e
+            };
+        }
+        
     }
 }
