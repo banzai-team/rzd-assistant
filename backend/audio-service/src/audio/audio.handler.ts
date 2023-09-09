@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { Speech, UploadedFile } from './audio.dto';
+import { SpeechDto, TextDto, UploadedFile } from './audio.dto';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { FileStorageConfig } from 'src/config/configuration';
 import { join } from 'path';
+import { HttpService } from '@nestjs/axios';
+import { Observable, catchError, firstValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class AudioHandler {
@@ -12,16 +14,14 @@ export class AudioHandler {
     private readonly t2sConfig;
     private readonly fileStorageConfig: FileStorageConfig;
 
-    
-    constructor(private configService: ConfigService) {
+    constructor(private readonly http: HttpService, 
+        private configService: ConfigService) {
         this.s2tConfig = this.configService.get('s2t');
         this.t2sConfig = this.configService.get('t2s');
         this.fileStorageConfig = this.configService.get('fileStorage');
-        this.logger.debug(`Imported audio configuration. s2t::${JSON.stringify(this.s2tConfig)}, t2s::${JSON.stringify(this.t2sConfig)}`)
-
     }
 
-    async persistAudio(file: UploadedFile) {
+    async s2t(file: UploadedFile): Promise<TextDto> {
         if (this.fileStorageConfig.local) {
             const savePath = join(this.fileStorageConfig.dir, file.filename) 
             this.logger.debug(`Persiting file::${file.filename}.${file.mimetype} locally::${savePath}`)
@@ -32,17 +32,33 @@ export class AudioHandler {
                 }
                 this.logger.debug(`File was successfuly saved in ${savePath}`)
             });
+            const text = await this.s2tInternal({
+                path: savePath,
+            });
+            return text
         } else {
             this.logger.error(`Storing non locally is not supported`)
             throw new HttpException(`Storing file non locally is not supported`, HttpStatus.BAD_REQUEST)
         }
     }
 
-    async s2t(speech: Speech) {
-
+    private async s2tInternal(speech: SpeechDto): Promise<TextDto> {
+        this.logger.debug(`Transforming speech::${speech.path} into text. Performing request to::${this.s2tConfig.host}:${this.s2tConfig.port}/transform`);
+        return await firstValueFrom(
+            this.http.post(`http://${this.s2tConfig.host}:${this.s2tConfig.port}/transform`, JSON.stringify({"file_path": speech.path}), {
+            headers: {'Content-Type': 'application/json'}
+        })
+            .pipe(
+                map(res => ({text: res.data.result}))
+            )
+            .pipe(
+                catchError(() => {
+                    throw new HttpException('S2T service is not available', HttpStatus.SERVICE_UNAVAILABLE);
+                }),
+            ));
     }
 
-    async t2s(text: Text) {    
+    async t2s(text: TextDto) {    
 
     }
 }
