@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Logger, Param, ParseIntPipe, Post, Query, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Inject, Logger, Param, ParseIntPipe, Patch, Post, Query, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ConversationService } from './conversation.service';
 import { CreateConversationRequest } from './conversation.dto';
 import { MessagePipelineService } from 'src/message-pipeline/message-pipeline.service';
 import { MessageSource } from './conversation.enum';
+import { Message } from './conversation.entity';
 
 
 @Controller('conversation')
@@ -69,5 +70,10 @@ export class ConversationController {
             offset: offset || 0, 
             size: size || 10
         })
+    }
+
+    @Patch('message/:id')
+    async patchMessage(@Param('id', ParseIntPipe) messageId: number, @Body() message: Message) {
+        return await this.conversationService.patchMessage(messageId, message);
     }
 }

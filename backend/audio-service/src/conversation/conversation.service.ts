@@ -88,4 +88,19 @@ export class ConversationService {
             total
         }
     }
+
+    async patchMessage(id: number, messagePatch: Message) {
+        const message = await this.messageRepository.findOne({
+            where: {
+                id
+            }
+        });
+        if (!message) {
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        if (messagePatch.content) {
+            message.content = messagePatch.content;
+        }
+        return await this.messageRepository.save(message);
+    }
 }
