@@ -2,6 +2,16 @@ export const STORAGE_KEYS = {
     CHAT_ID: 'chatId'
 };
 
+export const assistantTypes = [
+    {
+        text: "По умолчанию",
+        value: "default_text_model"
+    },
+    {
+        text: "На основе правил",
+        value: "rule_based_text_model"
+    }
+]
 export const trainsTypes = [
     {
         text: "2М62",

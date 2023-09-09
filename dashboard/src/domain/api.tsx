@@ -32,8 +32,8 @@ export function sendMessage(payload: SendMessagePayload) {
 //   return axios.post(`${config.apiUrl}/conversation/create`);
 // }
 
-export function createChat(payload: string) {
-  return axios.post(`${config.apiUrl}/conversation/create`, { train: payload });
+export function createChat(payload: { train: string, modelType: string }) {
+  return axios.post(`${config.apiUrl}/conversation/create`, payload);
 }
 
 export function getConversationHistory(id: string | undefined) {

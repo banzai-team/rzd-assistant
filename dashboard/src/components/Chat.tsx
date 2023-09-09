@@ -16,11 +16,12 @@ import Recorder from './AudioRecorder';
 import logo from '../images/rzd.jpg';
 import {useMutation} from 'react-query';
 import {createChat, sendMessage} from '../domain/api';
-import {STORAGE_KEYS, trainsTypes} from '../objects';
+import {assistantTypes, STORAGE_KEYS, trainsTypes} from '../objects';
 import ChatMessages from "./ChatMessages";
 
 const Chat: React.FC = () => {
     const [train, setTrain] = React.useState(trainsTypes[0].value);
+    const [assistantType, setAssistantType] = React.useState(assistantTypes[0].value);
     const [chatId, setChatId] = React.useState(localStorage.getItem(STORAGE_KEYS.CHAT_ID));
 
     const create = useMutation(createChat, {
@@ -36,7 +37,7 @@ const Chat: React.FC = () => {
         }
     });
 
-    const onCreate = () => create.mutate(train);
+    const onCreate = () => create.mutate({train, modelType: assistantType});
     const onSend = (_: any, textContent: string) => {
         console.log(textContent);
         sendText.mutate({text: textContent, id: chatId})
@@ -79,20 +80,39 @@ const Chat: React.FC = () => {
                             <MessageList.Content>
                                 <Center>
                                     <Card p={10} mt={10} width={400}>
-                                        <Text fontSize="xl" align="center" color='purple'>
+                                        <Text fontSize="lg">
                                             Выбирите тип поезда
                                         </Text>
                                         <Select
                                             colorScheme='purple'
                                             variant='outline'
-                                            mt={4}
-                                            mb={10}
+                                            mt={1}
+                                            mb={4}
                                             onChange={(ev) => setTrain(ev.target.value)}
                                         >
                                             {
                                                 trainsTypes.map(train => (
                                                     <option value={train.value} key={train.value}>
                                                         {train.text}
+                                                    </option>
+                                                ))
+                                            }
+                                        </Select>
+
+                                        <Text fontSize="lg">
+                                            Выбирите тип ассистента
+                                        </Text>
+                                        <Select
+                                            colorScheme='purple'
+                                            variant='outline'
+                                            mt={1}
+                                            mb={10}
+                                            onChange={(ev) => setAssistantType(ev.target.value)}
+                                        >
+                                            {
+                                                assistantTypes.map(assistantT => (
+                                                    <option value={assistantT.value} key={assistantT.value}>
+                                                        {assistantT.text}
                                                     </option>
                                                 ))
                                             }
