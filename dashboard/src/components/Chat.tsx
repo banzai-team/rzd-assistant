@@ -39,7 +39,6 @@ const Chat: React.FC = () => {
 
     const onCreate = () => create.mutate({train, modelType: assistantType});
     const onSend = (_: any, textContent: string) => {
-        console.log(textContent);
         sendText.mutate({text: textContent, id: chatId})
     };
     const editorRef = useRef<HTMLDivElement | null>(null);
@@ -149,7 +148,7 @@ const Chat: React.FC = () => {
                                 style={{flex: "1", borderTop: "none"}}
                                 onSend={onSend}
                             />
-                            <Box p={1}><Recorder /></Box>
+                            <Box p={1}><Recorder chatId={chatId}/></Box>
                         </Flex>
                     ) : null
                 }

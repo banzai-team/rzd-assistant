@@ -2,12 +2,9 @@ import React from "react";
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import {useMutation} from 'react-query';
 import {sendRecord} from '../domain/api';
-import {STORAGE_KEYS} from '../objects';
 import {Spinner} from "@chakra-ui/react";
 
-const Recorder: React.FC = () => {
-    const chatId = localStorage.getItem(STORAGE_KEYS.CHAT_ID) ?? 29;
-
+const Recorder: React.FC<{ chatId: string }> = ({ chatId }) => {
     const send = useMutation(sendRecord, {
         onSuccess: (data) => {
             console.log('File sent')
@@ -16,7 +13,7 @@ const Recorder: React.FC = () => {
 
     if (send.isLoading) {
         return <Spinner width="30px" height="30px" ml="10px" color="purple" />
-    };
+    }
 
     return <React.StrictMode>
         <AudioRecorder
