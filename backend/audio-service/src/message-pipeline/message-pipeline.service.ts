@@ -89,7 +89,7 @@ export class MessagePipelineService {
      * Creates blank response message in db. The message perioducaly gets updated
      */
     private async handleDefaultModel(conversation: Conversation, message: Message, context: Page): Promise<Message> {
-        const preparedResponseMessage = await this.createMessage.createMessage(conversation.id, message.source, '');
+        const preparedResponseMessage = await this.createMessage.createMessage(conversation.id, MessageSource.BOT, '');
         this.logger.debug(`Created blank response message::${JSON.stringify(preparedResponseMessage)} to be updated in the future`);
         // response is ignored
         await this.botInteraction.askBot(
