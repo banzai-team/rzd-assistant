@@ -138,12 +138,12 @@ def process(query: str, chat_history: [str], message_id: int):
     tokens.extend(message_tokens)
 
     partial_text = "еуыеыеые"
-    # requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
+    requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""", partial_text)
     for i, token in enumerate(generator):
         if token == model.token_eos() or (max_new_tokens is not None and i >= max_new_tokens):
             break
         partial_text += model.detokenize([token]).decode("utf-8", "ignore")
         logging.info(partial_text)
-        # requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
+        requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""", partial_text)
 
     return partial_text

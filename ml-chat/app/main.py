@@ -1,5 +1,6 @@
 import logging
 import os
+from threading import Thread
 
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -33,8 +34,9 @@ class RuleBased(BaseModel):
 
 @app.post("/text")
 def speech_to_text(item: Item):
-    result = process(item.query, item.userContext, item.message_id)
-    return {"result": result}
+    thread = Thread(target=process, args=(item.query, item.userContext, item.message_id))
+    thread.start()
+    return {"result": ""}
 
 
 @app.post("/rule_based_text")
