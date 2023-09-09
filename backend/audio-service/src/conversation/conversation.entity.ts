@@ -1,5 +1,6 @@
 import { ModelType } from "src/bot-interaction/bot-interaction.enum";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { MessageSource } from "./conversation.enum";
 
 @Entity()
 export class Conversation {
@@ -25,7 +26,7 @@ export class Message {
     @CreateDateColumn()
     time: Date
     @Column()
-    source: string;
+    source: MessageSource;
     @Column()
     content: string;
     @Column({

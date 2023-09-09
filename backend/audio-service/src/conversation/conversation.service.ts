@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateConversationRequest, Page, PageableQuery } from './conversation.dto';
 import { ModelType } from 'src/bot-interaction/bot-interaction.enum';
+import { MessageSource } from './conversation.enum';
 
 @Injectable()
 export class ConversationService {
@@ -25,7 +26,7 @@ export class ConversationService {
         return conv;
     }
 
-    async createMessage(conversationId: number, source: string, text: string, filePath?: string) {
+    async createMessage(conversationId: number, source: MessageSource, text: string, filePath?: string) {
         this.logger.debug(`Creating message...`)
         const conversation = await this.conversationRepository.findOne({
             where: {

@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { ConversationService } from 'src/conversation/conversation.service';
 import { Page } from 'src/conversation/conversation.dto';
 import { ModelType } from 'src/bot-interaction/bot-interaction.enum';
+import { MessageSource } from 'src/conversation/conversation.enum';
 
 @Injectable()
 export class MessagePipelineService {
@@ -50,7 +51,7 @@ export class MessagePipelineService {
             offset: 0,
             size: 100
         });
-        const message = await this.createMessage.createMessage(conversationId, 'user', text);
+        const message = await this.createMessage.createMessage(conversationId, MessageSource.USER, text);
         return await this.commonChain(conversation, message, context);
     }
 
@@ -78,7 +79,7 @@ export class MessagePipelineService {
         );
         this.logger.debug(`Bot responded::${JSON.stringify(botResponse)}, model::${conversation.train}`);
         if (botResponse.ok) {
-            return await this.createMessage.createMessage(conversation.id, 'bot', botResponse.message);
+            return await this.createMessage.createMessage(conversation.id, MessageSource.BOT, botResponse.message);
         } else {
             throw new HttpException(`An error occured::${botResponse.error}`, HttpStatus.INTERNAL_SERVER_ERROR)
         }
@@ -96,7 +97,8 @@ export class MessagePipelineService {
             {
                 query: message.content,
                 train_id: conversation.train,
-                context: context.content.map(m => m.content),
+                userContext: context.size > 0 ? context.content.filter(m => m.source === MessageSource.USER) : [],
+                botContext: context.size > 0 ? context.content.filter(m => m.source === MessageSource.BOT) : [],
                 message_id: preparedResponseMessage.id
             }
         );

@@ -1,9 +1,17 @@
-export interface BotRequest {
+export interface RuleModelRequest {
     // [new -> old]
     context: string[];
     train_id: string;
     query: string;
-    message_id?: number;
+    
+}
+
+export interface DefaultModelAsyncRequest {
+    userContext: string[];
+    botContext: string[];
+    query: string;
+    train_id: string;
+    message_id: number;
 }
 
 export interface BotResponse {

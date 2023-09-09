@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BotRequest, BotResponse } from './bot-interaction.dto';
+import { RuleModelRequest, BotResponse, DefaultModelAsyncRequest } from './bot-interaction.dto';
 import { ConnectionConfig } from 'src/config/configuration';
 import { Observable, catchError, firstValueFrom, map } from 'rxjs';
 import { ModelType } from './bot-interaction.enum';
@@ -17,7 +17,7 @@ export class BotInteractionService {
         this.defaultModelConfig = configService.get('models')['default'];
     }
 
-    async askBot(model: ModelType, request: BotRequest): Promise<BotResponse> | never {
+    async askBot(model: ModelType, request: RuleModelRequest | DefaultModelAsyncRequest): Promise<BotResponse> | never {
         try {
             let host, port, endpoint;
             if (model === ModelType.RULE_BASED_TEXT_MODEL) {
