@@ -36,7 +36,7 @@ export class ConversationController {
                 return res
             } else if (body.text) {
                 this.logger.debug(`Sending raw text::${body.text}`)
-                const res = await this.messagePipeline.textChain(conversationId, {text: body.text});
+                const res = await this.messagePipeline.textChain(conversationId, body.text);
                 return res
             } 
     }

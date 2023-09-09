@@ -24,7 +24,7 @@ export class ConversationService {
         return conv;
     }
 
-    async createMessage(conversationId: number, source: string, text: TextDto, filePath?: string) {
+    async createMessage(conversationId: number, source: string, text: string, filePath?: string) {
         this.logger.debug(`Creating message...`)
         const conversation = await this.conversationRepository.findOne({
             where: {
@@ -35,14 +35,14 @@ export class ConversationService {
             this.logger.debug(`Conversation with id::${conversationId} was not found`);
             throw new HttpException(`Conversation with id::${conversationId} does not exist`, HttpStatus.BAD_REQUEST);
         }
-        const msg = new Message();
-        msg.content = text.text
+        let msg = new Message();
+        msg.content = text
         msg.time = new Date();
         msg.source = source;
         msg.conversation = conversation;
         msg.audio = filePath;
-        await this.messageRepository.save(msg);
-        this.logger.debug(`Message was created`);
+        msg = await this.messageRepository.save(msg);
+        this.logger.debug(`Message id::${msg.id} content::${msg.content} was created`);
         return msg;
     }
 

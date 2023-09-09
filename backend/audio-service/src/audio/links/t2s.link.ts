@@ -1,7 +1,7 @@
-import { SavedFile, TextDto } from "../audio.dto";
+import { SavedFile } from "../audio.dto";
 
 export class T2S {
-    async s2t(text: TextDto): Promise<SavedFile> {
+    async s2t(text: string): Promise<SavedFile> {
         return 
     }
 }

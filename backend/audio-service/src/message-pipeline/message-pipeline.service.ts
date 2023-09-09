@@ -3,7 +3,6 @@ import { S2T } from 'src/audio/links/s2t.link';
 import { CreateMessage } from 'src/conversation/links/create-message.link';
 import { UploadMessage } from 'src/conversation/links/upload-message.link';
 import { MessageRequest } from './message-pipeline.dto';
-import { TextDto } from 'src/audio/audio.dto';
 import { BotInteraction } from 'src/bot-interaction/link/bot-interation.link';
 import { Conversation, Message } from 'src/conversation/conversation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -40,7 +39,7 @@ export class MessagePipelineService {
         return await this.commonChain(conversation, message, context);
     }
 
-    async textChain(conversationId: number, text: TextDto): Promise<Message> {
+    async textChain(conversationId: number, text: string): Promise<Message> {
         const conversation = await this.conversationService.getConversationById(conversationId);
         if (!conversation) {
             this.logger.error(`Conversation with id::${conversationId} was not found`)
@@ -63,7 +62,7 @@ export class MessagePipelineService {
         });
         this.logger.debug(`Bot responded::${JSON.stringify(botResponse)}, model::${conversation.train}`);
         if (botResponse.ok) {
-            return await this.createMessage.createMessage(conversation.id, 'bot', { text: botResponse.message });
+            return await this.createMessage.createMessage(conversation.id, 'bot', botResponse.message);
         } else {
             throw new HttpException(`An error occured::${botResponse.error}`, HttpStatus.INTERNAL_SERVER_ERROR)
         }
