@@ -4,7 +4,7 @@ import os
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-#from app.model.chat import process
+from app.model.chat import process
 from app.model.rulebased_chat import rule_based_process
 
 logging.basicConfig(level=logging.INFO)
@@ -23,10 +23,10 @@ class Item(BaseModel):
     train_id: str
 
 
-# @app.post("/text")
-# def speech_to_text(item: Item):
-#     result = process(item.query, [])
-#     return {"result": result}
+@app.post("/text")
+def speech_to_text(item: Item):
+    result = process(item.query, [])
+    return {"result": result}
 
 @app.post("/rule_based_text")
 def rule_based_responce(item: Item):
