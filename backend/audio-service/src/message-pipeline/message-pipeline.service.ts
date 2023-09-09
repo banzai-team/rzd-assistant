@@ -54,12 +54,12 @@ export class MessagePipelineService {
         return await this.commonChain(conversation, message, context);
     }
 
-    private async commonChain(conversation: Conversation, message: Message, context: Page) {
+    private async commonChain(conversation: Conversation, message: Message, context: Page): Promise<Message> {
         this.logger.debug(`Sending message::${message.content}, context of length::${context.size}`);
         if (conversation.model == ModelType.DEFAULT_TEXT_MODEL) {
-            await this.handleDefaultModel();
+            return await this.handleDefaultModel(conversation, message, context);
         } else {
-            await this.handleRuleBasedModel();
+            return await this.handleRuleBasedModel(conversation, message, context);
         }
         
     }
@@ -67,7 +67,7 @@ export class MessagePipelineService {
     /**
      * Returns complete message at once
      */
-    private async handleRuleBasedModel(conversation: Conversation, message: Message, context: Page) {
+    private async handleRuleBasedModel(conversation: Conversation, message: Message, context: Page): Promise<Message> {
         const botResponse = await this.botInteraction.askBot(
             conversation.model,
             {
@@ -87,7 +87,7 @@ export class MessagePipelineService {
     /**
      * Creates blank response message in db. The message perioducaly gets updated
      */
-    private async handleDefaultModel(conversation: Conversation, message: Message, context: Page) {
+    private async handleDefaultModel(conversation: Conversation, message: Message, context: Page): Promise<Message> {
         const preparedResponseMessage = await this.createMessage.createMessage(conversation.id, message.source, '');
         this.logger.debug(`Created blank response message::${JSON.stringify(preparedResponseMessage)} to be updated in the future`);
         // response is ignored
@@ -100,5 +100,6 @@ export class MessagePipelineService {
                 message_id: preparedResponseMessage.id
             }
         );
+        return preparedResponseMessage;
     }
 }
