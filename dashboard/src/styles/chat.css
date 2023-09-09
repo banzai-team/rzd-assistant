@@ -4,7 +4,7 @@
 }
 
 .cs-conversation-header.chat_header {
-    background: linear-gradient(60deg, #292cda, #05a5f7);
+    background: linear-gradient(60deg, #8d2ce1, #4b01e0 );
 }
 
 .cs-conversation-header__content .cs-conversation-header__user-name,
@@ -20,15 +20,19 @@
 
 .cs-message--outgoing .cs-message__content-wrapper .cs-message__content {
     border-radius: 10px;
-    background: #027dfc;
+    background: #4b01e0;
     color: #ffffff;
 }
 
 .cs-message--incoming .cs-message__content-wrapper .cs-message__content {
     border-radius: 10px;
-    background: #D2F0FF;
+    background: #E6E0F1;
 }
 
 .scrollbar-container.cs-message-list__scroll-wrapper {
     padding-top: 10px
+}
+
+.cs-button.cs-button--send {
+    color: #8d2ce1;
 }

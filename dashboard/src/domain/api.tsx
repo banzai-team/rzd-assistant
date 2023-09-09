@@ -15,6 +15,7 @@ export function sendRecord(payload: SendRecordPayload) {
     },
   });
 }
+
 export function sendMessage(payload: SendMessagePayload) {
   const form = new FormData();
 
@@ -32,15 +33,7 @@ export function sendMessage(payload: SendMessagePayload) {
 // }
 
 export function createChat(payload: string) {
-  const form = new FormData();
-
-  form.append("train", payload);
-
-  return axios.post(`${config.apiUrl}/conversation/create`, form, {
-    headers: {
-      'Content-Type': `multipart/form-data;`,
-    },
-  });
+  return axios.post(`${config.apiUrl}/conversation/create`, { train: payload });
 }
 
 export function getConversationHistory(id: string | undefined) {

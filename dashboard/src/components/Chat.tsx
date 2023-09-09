@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import "../styles/chat.css"
 
 import {Box, Flex, Button, Center, Text, Select, Card, IconButton} from '@chakra-ui/react';
@@ -37,20 +37,30 @@ const Chat: React.FC = () => {
     });
 
     const onCreate = () => create.mutate(train);
-    const onSend = (textContent: string) => sendText.mutate({text: textContent, id: chatId});
+    const onSend = (_: any, textContent: string) => {
+        console.log(textContent);
+        sendText.mutate({text: textContent, id: chatId})
+    };
+    const editorRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const msgInput = document.querySelector(".cs-message-input__content-editor") as HTMLDivElement;
+        editorRef.current = msgInput;
+        editorRef.current?.setAttribute("contenteditable", "plaintext-only");
+    },[]);
 
     return <Box height="100vh">
         <MainContainer>
             <ChatContainer>
                 <ConversationHeader className="chat_header">
                     <Avatar src={logo} name="Your Assistant" className="main_avatar" />
-                    <ConversationHeader.Content userName="Your Assistant" info="Active 10 mins ago" className="transparent" />
+                    <ConversationHeader.Content userName="Your Assistant" info="Online" className="transparent" />
                     {
                         chatId && (
                             <ConversationHeader.Actions className="transparent">
                                 <IconButton
                                     isRound={true}
-                                    colorScheme='blue'
+                                    colorScheme='purple'
                                     size="sm"
                                     aria-label="close"
                                     icon={<AiOutlineClose />}
@@ -69,10 +79,11 @@ const Chat: React.FC = () => {
                             <MessageList.Content>
                                 <Center>
                                     <Card p={10} mt={10} width={400}>
-                                        <Text fontSize="xl" align="center">
+                                        <Text fontSize="xl" align="center" color='purple'>
                                             Please select type of train
                                         </Text>
                                         <Select
+                                            colorScheme='purple'
                                             variant='outline'
                                             mt={4}
                                             mb={10}
@@ -88,7 +99,7 @@ const Chat: React.FC = () => {
                                         </Select>
 
                                         <Button
-                                            colorScheme='messenger'
+                                            colorScheme='purple'
                                             variant='outline'
                                             onClick={onCreate}
                                         >
@@ -112,6 +123,7 @@ const Chat: React.FC = () => {
                             alignItems="end"
                         >
                             <MessageInput
+                              contentEditable={false}
                                 placeholder="Type message here"
                                 attachButton={false}
                                 style={{flex: "1", borderTop: "none"}}

@@ -1,17 +1,17 @@
 @keyframes slide {
     from {
-        right: -30px;
+        right: -90px;
         /*width: 300%;*/
     }
 
     to {
-        right: calc(100% + 30px);
+        right: calc(100% + 90px);
         /*width: 100%;*/
     }
 }
 
 .go-train {
-    height: 20px;
+    height: 30px;
     position: absolute;
 
     animation-duration: 4s;
@@ -23,7 +23,7 @@
     width: 100%;
     margin-left: -40px; /* hardcode. fix */
     overflow: hidden;
-    height: 22px;
+    height: 30px;
     /*position: absolute;*/
     bottom: 0;
     opacity: 0.3;
