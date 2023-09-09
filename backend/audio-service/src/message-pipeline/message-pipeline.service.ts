@@ -9,6 +9,7 @@ import { Conversation, Message } from 'src/conversation/conversation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConversationService } from 'src/conversation/conversation.service';
+import { Page } from 'src/conversation/conversation.dto';
 
 @Injectable()
 export class MessagePipelineService {
@@ -31,8 +32,12 @@ export class MessagePipelineService {
         }
         const savedFile = await this.uploadMessage.saveFile(msg.file);
         const text = await this.s2t.s2t(savedFile);
+        const context = await this.conversationService.getConversationHistory(conversation.id, {
+            offset: 0,
+            size: 100
+        });
         const message = await this.createMessage.createMessage(conversationId, msg.source, text, savedFile.path);
-        return await this.commonChain(conversation, message);
+        return await this.commonChain(conversation, message, context);
     }
 
     async textChain(conversationId: number, text: TextDto): Promise<Message> {
@@ -41,15 +46,15 @@ export class MessagePipelineService {
             this.logger.error(`Conversation with id::${conversationId} was not found`)
             throw new HttpException('Not found', HttpStatus.NOT_FOUND);
         }
-        const message = await this.createMessage.createMessage(conversationId, 'user', text);
-        return await this.commonChain(conversation, message);
-    }
-
-    private async commonChain(conversation: Conversation, message: Message) {
         const context = await this.conversationService.getConversationHistory(conversation.id, {
             offset: 0,
             size: 100
         });
+        const message = await this.createMessage.createMessage(conversationId, 'user', text);
+        return await this.commonChain(conversation, message, context);
+    }
+
+    private async commonChain(conversation: Conversation, message: Message, context: Page) {
         this.logger.debug(`Sending message::${message.content}, context of length::${context.size}`)
         const botResponse = await this.botInteraction.askBot({
             query: message.content,
