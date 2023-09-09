@@ -54,13 +54,13 @@ const Chat: React.FC = () => {
             <ChatContainer>
                 <ConversationHeader className="chat_header">
                     <Avatar src={logo} name="Your Assistant" className="main_avatar" />
-                    <ConversationHeader.Content userName="Your Assistant" info="Active 10 mins ago" className="transparent" />
+                    <ConversationHeader.Content userName="Your Assistant" info="Online" className="transparent" />
                     {
                         chatId && (
                             <ConversationHeader.Actions className="transparent">
                                 <IconButton
                                     isRound={true}
-                                    colorScheme='blue'
+                                    colorScheme='purple'
                                     size="sm"
                                     aria-label="close"
                                     icon={<AiOutlineClose />}
@@ -79,10 +79,11 @@ const Chat: React.FC = () => {
                             <MessageList.Content>
                                 <Center>
                                     <Card p={10} mt={10} width={400}>
-                                        <Text fontSize="xl" align="center">
+                                        <Text fontSize="xl" align="center" color='purple'>
                                             Please select type of train
                                         </Text>
                                         <Select
+                                            colorScheme='purple'
                                             variant='outline'
                                             mt={4}
                                             mb={10}
@@ -98,7 +99,7 @@ const Chat: React.FC = () => {
                                         </Select>
 
                                         <Button
-                                            colorScheme='messenger'
+                                            colorScheme='purple'
                                             variant='outline'
                                             onClick={onCreate}
                                         >
