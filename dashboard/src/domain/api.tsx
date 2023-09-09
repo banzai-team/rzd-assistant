@@ -15,8 +15,20 @@ export function sendRecord(payload: SendRecordPayload) {
   });
 }
 
-export function createChat() {
-  return axios.post(`${config.apiUrl}/conversation/create`);
+// export function createChat() {
+//   return axios.post(`${config.apiUrl}/conversation/create`);
+// }
+
+export function createChat(payload: string) {
+  const form = new FormData();
+
+  form.append("train", payload);
+
+  return axios.post(`${config.apiUrl}/conversation/create`, form, {
+    headers: {
+      'Content-Type': `multipart/form-data;`,
+    },
+  });
 }
 
 
