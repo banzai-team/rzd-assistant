@@ -14,7 +14,7 @@
     height: 20px;
     position: absolute;
 
-    animation-duration: 3s;
+    animation-duration: 4s;
     animation-name: slide;
     animation-iteration-count: infinite;
 }
@@ -24,6 +24,7 @@
     margin-left: -40px; /* hardcode. fix */
     overflow: hidden;
     height: 22px;
-    position: absolute;
+    /*position: absolute;*/
     bottom: 0;
+    opacity: 0.3;
 }
