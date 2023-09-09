@@ -1,14 +1,14 @@
 services:
-#  app:
-#    container_name: app-dev
-#    image: app-dev
-#    build:
-#      context: dashboard
-#      target: development
-#    volumes:
-#      - ./src:/app/src
-#    ports:
-#      - 4000:3000
+  app:
+    container_name: app-dev
+    image: app-dev
+    build:
+      context: dashboard
+      target: development
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 4000:3000
 #  rabbitmq:
 #    image: rabbitmq:3-management-alpine
 #    container_name: 'rabbitmq'
@@ -27,6 +27,8 @@ services:
     ports:
       - '5432:5432'
   backend:
+    volumes:
+      - /tmp:/tmp
 #    command:
 #      - /bin/sh
 #      - -c
@@ -43,10 +45,6 @@ services:
       RECOGNITION_PORT: 3333
       FILE_STORAGE_LOCAL: true
       FILE_STORAGE_DIR: /tmp
-#    depends_on:
-#      - postgres
-#      - rabbitmq
-#      - ml
     image: banzai/audio-service:v0.0.1
     build:
       context: backend/audio-service

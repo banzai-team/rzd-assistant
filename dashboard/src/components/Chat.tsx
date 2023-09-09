@@ -9,8 +9,7 @@ import {
     MessageInput,
     MessageList,
     ConversationHeader,
-    Avatar,
-    InfoButton
+    Avatar
 } from '@chatscope/chat-ui-kit-react';
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Recorder from './AudioRecorder';
