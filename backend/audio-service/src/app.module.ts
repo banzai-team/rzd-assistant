@@ -7,8 +7,8 @@ import { AudioModule } from './audio/audio.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceOptions } from 'typeorm';
-import { AppGateway } from './app/app.gateway';
 import { MessagePipelineModule } from './message-pipeline/message-pipeline.module';
+import { WebsocketModule } from './app/websocket.module';
 
 @Module({
   imports: [
@@ -24,8 +24,9 @@ import { MessagePipelineModule } from './message-pipeline/message-pipeline.modul
       inject: [ConfigService],
     }),
     MessagePipelineModule,
+    WebsocketModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [AppService],
 })
 export class AppModule {}

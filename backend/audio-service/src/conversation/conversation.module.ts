@@ -8,23 +8,28 @@ import { Conversation, Message } from './conversation.entity';
 import { UploadMessage } from './links/upload-message.link';
 import { CreateMessage } from './links/create-message.link';
 import { MessagePipelineModule } from 'src/message-pipeline/message-pipeline.module';
+import { FileSend } from './links/file-send.link';
+import { WebsocketModule } from 'src/app/websocket.module';
 
 @Module({
   imports: [
     AudioModule, 
     ConfigModule,
     TypeOrmModule.forFeature([Conversation, Message]),
-    forwardRef(() =>  MessagePipelineModule)
+    forwardRef(() =>  MessagePipelineModule),
+    WebsocketModule,
   ],
   controllers: [ConversationController],
   providers: [
     ConversationService,
     UploadMessage,
-    CreateMessage
+    CreateMessage,
+    FileSend
   ],
   exports: [
     UploadMessage,
-    CreateMessage
+    CreateMessage,
+    FileSend
   ]
 })
 export class ConversationModule {}

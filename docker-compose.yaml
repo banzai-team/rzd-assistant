@@ -53,6 +53,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
+      - '3002:3001'
   ml:
     volumes:
     - /tmp:/tmp
