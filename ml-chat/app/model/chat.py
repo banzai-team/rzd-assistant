@@ -1,5 +1,6 @@
 import logging
 
+from app.config.config import config
 from huggingface_hub import snapshot_download
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -8,6 +9,9 @@ from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from llama_cpp import Llama
+import requests
+
+# from app.db.db import pg_db
 
 repo_name = "IlyaGusev/saiga2_13b_gguf"
 model_name = "ggml-model-q4_K.gguf"
@@ -17,22 +21,17 @@ n_gpu_layers = 1  # Metal set to 1 is enough.
 n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip.
 model_path = f"./data/{model_name}"
 db_path = "./data/test.txt"
-model=None
 
-def load_modules():
-    snapshot_download(repo_id=repo_name, local_dir="./data/", allow_patterns=model_name)
-    model = Llama(
-        model_path=model_path,
-        n_gpu_layers=n_gpu_layers,
-        n_batch=n_batch,
-        n_ctx=2048,
-        f16_kv=True,  # MUST set to True, otherwise you will run into problem after a couple of calls
-        # callback_manager=callback_manager,
-        verbose=True,
-    )
-
-if False:
-    load_modules()
+snapshot_download(repo_id=repo_name, local_dir="./data/", allow_patterns=model_name)
+model = Llama(
+    model_path=model_path,
+    n_gpu_layers=n_gpu_layers,
+    n_batch=n_batch,
+    n_ctx=2048,
+    f16_kv=True,  # MUST set to True, otherwise you will run into problem after a couple of calls
+    # callback_manager=callback_manager,
+    verbose=True,
+)
 
 embedder_name = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
 
@@ -98,12 +97,14 @@ def retrieve(history, db, retrieved_docs, k_documents):
     return retrieved_docs
 
 
-def process(query: str, chat_history: [str]):
-    chat_history = [[query]]
+def process(query: str, chat_history: [str], message_id: int):
+    chat_history = [[query] + chat_history]
     logging.info("db: started to load")
     db = load_db(db_path)
     logging.info("db: loaded")
     retrieved_docs = retrieve(chat_history, db, [], 5)
+
+
     last_user_message = chat_history[-1][0]
     if retrieved_docs:
         last_user_message = f"Контекст: {retrieved_docs}\n\nИспользуя контекст, ответь на вопрос: {last_user_message}"
@@ -111,6 +112,10 @@ def process(query: str, chat_history: [str]):
     tokens.append(LINEBREAK_TOKEN)
     role_tokens = [model.token_bos(), BOT_TOKEN, LINEBREAK_TOKEN]
     tokens.extend(role_tokens)
+
+    # for user_message in chat_history[:-1]:
+    #     message_tokens = get_message_tokens(model=model, role="user", content=user_message)
+    #     tokens.extend(message_tokens)
 
     logging.info("model: running model")
 
@@ -121,13 +126,19 @@ def process(query: str, chat_history: [str]):
         temp=0.1
     )
 
+    # sql = """ UPDATE message
+    #                SET content = %s
+    #                WHERE id = %s"""
+
     message_tokens = get_message_tokens(model=model, role="user", content=last_user_message)
     tokens.extend(message_tokens)
 
-    partial_text = ""
+    partial_text = "еуыеыеые"
+    requests.patch(f"""{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
     for i, token in enumerate(generator):
         if token == model.token_eos() or (max_new_tokens is not None and i >= max_new_tokens):
             break
         partial_text += model.detokenize([token]).decode("utf-8", "ignore")
+        requests.patch(f"""{config.BACKEND_HOST}:{config.BACKEND_PORT}/message/{message_id}""", partial_text)
 
     return partial_text

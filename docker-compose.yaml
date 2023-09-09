@@ -1,5 +1,6 @@
 services:
   app:
+    restart: always
     container_name: app-dev
     image: app-dev
     build:
@@ -19,6 +20,7 @@ services:
   #      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
   #      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
   postgres:
+    restart: always
     image: postgres:15.1-alpine
     environment:
       POSTGRES_DB: conversation
@@ -27,6 +29,7 @@ services:
     ports:
       - '5432:5432'
   backend:
+    restart: always
     depends_on:
       - postgres
     volumes:
@@ -50,9 +53,9 @@ services:
       RULE_MODEL_HOST: ml-chat
       RULE_MODEL_PORT: 4444
       RULE_MODEL_ENDPOINT: rule_based_text
-      DEFAULT_MODEL_HOST: localhost
-      DEFAULT_MODEL_PORT: 0
-      DEFAULT_MODEL_ENDPOINT: chat
+      DEFAULT_MODEL_HOST: ml-chat
+      DEFAULT_MODEL_PORT: 4444
+      DEFAULT_MODEL_ENDPOINT: text
     image: banzai/audio-service:v0.0.1
     build:
       context: backend/audio-service
@@ -72,6 +75,13 @@ services:
     ports:
       - '3001:3333'
   ml-chat:
+    restart: always
+    environment:
+      DB_NAME: conversation
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
     volumes:
       - /tmp:/tmp
       - app:/root/.cache

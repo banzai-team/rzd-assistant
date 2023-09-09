@@ -13,14 +13,14 @@ export class ConversationService {
 
     constructor(
         @InjectRepository(Conversation) private readonly conversationRepository: Repository<Conversation>,
-        @InjectRepository(Message) private readonly messageRepository: Repository<Message>, 
+        @InjectRepository(Message) private readonly messageRepository: Repository<Message>,
     ) {}
 
     async createConversation(create: CreateConversationRequest) {
         this.logger.debug(`Creating conversation...`)
         let conv = new Conversation();
         conv.train = create.train;
-        conv.model = create.modelType === ModelType.DEFAULT_TEXT_MODEL ? ModelType.DEFAULT_TEXT_MODEL : ModelType.RULE_BASED_TEXT_MODEL;
+        conv.model = create.modelType || ModelType.DEFAULT_TEXT_MODEL;
         conv = await this.conversationRepository.save(conv);
         this.logger.debug(`Conversation was created`)
         return conv;

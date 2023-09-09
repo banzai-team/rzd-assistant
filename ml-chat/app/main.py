@@ -19,18 +19,26 @@ def health():
 
 class Item(BaseModel):
     query: str
+    userContext: list
+    botContext: list
+    train_id: str
+    message_id: int
+
+
+class RuleBased(BaseModel):
+    query: str
     context: list
     train_id: str
 
 
 @app.post("/text")
 def speech_to_text(item: Item):
-    result = process(item.query, [])
+    result = process(item.query, item.userContext, item.message_id)
     return {"result": result}
 
 
 @app.post("/rule_based_text")
-def rule_based_text(item: Item):
+def rule_based_text(item: RuleBased):
     item.context = [item.query] + item.context
     item.context.reverse()
     result = rule_based_process(item.context, item.train_id, 'tfidf_data')
