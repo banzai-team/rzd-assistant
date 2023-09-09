@@ -1,0 +1,43 @@
+name: ML service CI workflow
+on:
+  push:
+    paths:
+      - 'ml/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'ml/**'
+permissions:
+  contents: write
+
+jobs:
+  deploy-container:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ml
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+      - run: echo $YANDEX_AUTH_KEY | docker login --username json_key --password-stdin cr.yandex
+        env:
+          YANDEX_AUTH_KEY: ${{ secrets.YANDEX_AUTH_KEY }}
+      - run: |
+          echo "Packaging docker image ..."
+          tag="$DOCKER_REGISTRY/banzai-ml-service:${{ github.sha }}"
+          docker build . -t $tag
+          docker push $tag
+        env:
+          DOCKER_REGISTRY: cr.yandex/crp4ultpl6m2qegvp1s6
+#      - name: Commit report
+#        working-directory: k8s-apps/banzai-ml-service/
+#        run: |
+#          git pull
+#          echo -e "image: \n  tag: ${{ github.sha }}" > values-production.yaml
+#          git config user.name github-actions
+#          git config user.email github-actions@github.com
+#          git add values-production.yaml
+#          git commit -m "bump backend version"
+#          git push
