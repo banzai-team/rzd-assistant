@@ -3,7 +3,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ConversationService } from './conversation.service';
 import { CreateConversationRequest } from './conversation.dto';
 import { MessagePipelineService } from 'src/message-pipeline/message-pipeline.service';
-import { FileSend } from './links/file-send.link';
+
 
 @Controller('conversation')
 export class ConversationController {
@@ -14,11 +14,11 @@ export class ConversationController {
         private readonly messagePipeline: MessagePipelineService,
         ) {}
     
-    @Post('upload')
+    @Post('/:id/upload')
     @UseInterceptors(FileInterceptor('file'))
     async upload(
+        @Param('id', ParseIntPipe) conversationId: number,
         @UploadedFile() file: Express.Multer.File,
-        @Query('conversation') conversationId: number
         ) {
             const res = await this.messagePipeline.pipe({
                 conversationId,
@@ -44,9 +44,10 @@ export class ConversationController {
 
     @Get('/:id/messages')
     async getConversationMessages(
+        @Param('id', ParseIntPipe) conversationId: number,
         @Query('offset') offset: number, 
         @Query('size') size: number) {
-        return await this.conversationService.getConversationHistory({
+        return await this.conversationService.getConversationHistory(conversationId, {
             offset: offset || 0, 
             size: size || 10
         })

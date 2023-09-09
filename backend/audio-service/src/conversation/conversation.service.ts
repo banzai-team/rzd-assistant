@@ -45,9 +45,14 @@ export class ConversationService {
         return msg;
     }
 
-    async getConversationHistory(pageableRequest: PageableQuery): Promise<Page> {
+    async getConversationHistory(conversationId: number, pageableRequest: PageableQuery): Promise<Page> {
         const [result, total] = await this.messageRepository.findAndCount(
             {
+                where: {
+                    conversation: {
+                        id: conversationId
+                    }
+                },
                 order: { time: "DESC" },
                 take: pageableRequest.size,
                 skip: pageableRequest.offset
