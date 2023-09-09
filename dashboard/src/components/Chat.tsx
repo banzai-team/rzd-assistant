@@ -13,7 +13,7 @@ import {
 } from '@chatscope/chat-ui-kit-react';
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Recorder from './AudioRecorder';
-import logo from '../images/rzd.jpeg';
+import logo from '../images/rzd.jpg';
 import {useMutation} from 'react-query';
 import {createChat, getConversationHistory} from '../domain/api';
 import {STORAGE_KEYS, trainsTypes} from '../objects';
