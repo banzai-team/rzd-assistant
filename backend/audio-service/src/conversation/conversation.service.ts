@@ -19,7 +19,7 @@ export class ConversationService {
         this.logger.debug(`Creating conversation...`)
         let conv = new Conversation();
         conv.train = create.train;
-        conv.model = create.modelType || ModelType.RULE_BASED_TEXT_MODEL;
+        conv.model = create.modelType === ModelType.DEFAULT_TEXT_MODEL ? ModelType.DEFAULT_TEXT_MODEL : ModelType.RULE_BASED_TEXT_MODEL;
         conv = await this.conversationRepository.save(conv);
         this.logger.debug(`Conversation was created`)
         return conv;
