@@ -19,9 +19,7 @@ export class BotInteractionService {
             this.logger.debug(`Making request to ask chat bot on http://${this.botConfig.host}:${this.botConfig.port}/${this.botConfig.endpoint}...`)
             const resp = await firstValueFrom(
                 this.http.post(`http://${this.botConfig.host}:${this.botConfig.port}/${this.botConfig.endpoint}`, 
-                JSON.stringify(request), {
-                    headers: {'Content-Type': 'application/json'}
-                }));
+                request, { headers: {'Content-Type': 'application/json'}}));
             return {
                 ok: true,
                 message: resp.data.result

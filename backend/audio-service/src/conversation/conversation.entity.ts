@@ -8,6 +8,10 @@ export class Conversation {
         nullable: true
     })
     train: string;
+    @Column({
+        nullable: true
+    })
+    model: string;
 
     @OneToMany(m => Message, m => m.conversation)
     messages: Message[];
