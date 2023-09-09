@@ -28,9 +28,10 @@ def speech_to_text(item: Item):
     result = process(item.query, [])
     return {"result": result}
 
+
 @app.post("/rule_based_text")
 def rule_based_text(item: Item):
-    item.context = [item.queue] + item.context
+    item.context = [item.query] + item.context
     item.context.reverse()
     result = rule_based_process(item.context, item.train_id, 'tfidf_data')
     return {"result": result}

@@ -1,7 +1,7 @@
 export interface BotRequest {
     // [new -> old]
     context: string[];
-    model: string;
+    train_id: string;
     query: string;
 }
 
