@@ -3,7 +3,7 @@ import { Conversation, Message } from './conversation.entity';
 import { TextDto } from 'src/audio/audio.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateConversationRequest } from './conversation.dto';
+import { CreateConversationRequest, Page, PageableQuery } from './conversation.dto';
 
 @Injectable()
 export class ConversationService {
@@ -42,5 +42,22 @@ export class ConversationService {
         await this.messageRepository.save(msg);
         this.logger.debug(`Message was created`);
         return msg;
+    }
+
+    async getConversationHistory(pageableRequest: PageableQuery): Promise<Page> {
+        const [result, total] = await this.messageRepository.findAndCount(
+            {
+                order: { time: "DESC" },
+                take: pageableRequest.size,
+                skip: pageableRequest.offset
+            }
+        );
+
+        return {
+            content: result,
+            offset: pageableRequest.offset,
+            size: result.length,
+            total
+        }
     }
 }

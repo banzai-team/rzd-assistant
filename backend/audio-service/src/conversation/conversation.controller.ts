@@ -4,6 +4,7 @@ import { AudioHandler } from 'src/audio/audio.handler';
 import { ConversationService } from './conversation.service';
 import { CreateConversationRequest } from './conversation.dto';
 import { MessagePipelineService } from 'src/message-pipeline/message-pipeline.service';
+import { FileSend } from './links/file-send.link';
 
 @Controller('conversation')
 export class ConversationController {
@@ -40,5 +41,15 @@ export class ConversationController {
     @Get(':id')
     async loadConversation(@Param('id', ParseIntPipe) id: number) {
         
+    }
+
+    @Get('/:id/messages')
+    async getConversationMessages(
+        @Query('offset') offset: number, 
+        @Query('size') size: number) {
+        return await this.conversationService.getConversationHistory({
+            offset: offset || 0, 
+            size: size || 10
+        })
     }
 }
