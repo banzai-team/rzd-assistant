@@ -23,7 +23,7 @@ export class ConversationService {
         return conv;
     }
 
-    async createMessage(conversationId: number, source: string, text: TextDto, file: SavedFile) {
+    async createMessage(conversationId: number, source: string, text: TextDto, filePath?: string) {
         this.logger.debug(`Creating message...`)
         const conversation = await this.conversationRepository.findOne({
             where: {
@@ -39,10 +39,29 @@ export class ConversationService {
         msg.time = new Date();
         msg.source = source;
         msg.conversation = conversation;
-        msg.audio = file.path;
+        msg.audio = filePath;
         await this.messageRepository.save(msg);
         this.logger.debug(`Message was created`);
         return msg;
+    }
+
+    async getConversations(): Promise<Conversation[]> {
+        return await this.conversationRepository.find({
+            relations: {
+                messages: false
+            }
+        });
+    }
+
+    async getConversationById(id: number): Promise<Conversation> {
+        return await this.conversationRepository.findOne({
+            where: {
+                id
+            },
+            relations: {
+                messages: false
+            }
+        });
     }
 
     async getConversationHistory(conversationId: number, pageableRequest: PageableQuery): Promise<Page> {
