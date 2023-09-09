@@ -47,9 +47,12 @@ services:
       RECOGNITION_PORT: 3333
       FILE_STORAGE_LOCAL: true
       FILE_STORAGE_DIR: /tmp
-      HELPER_HOST: ml-chat
-      HELPER_PORT: 4444
-      HELPER_ENDPOINT: rule_based_text
+      RULE_MODEL_HOST: ml-chat
+      RULE_MODEL_PORT: 4444
+      RULE_MODEL_ENDPOINT: rule_based_text
+      DEFAULT_MODEL_HOST: localhost
+      DEFAULT_MODEL_PORT: 0
+      DEFAULT_MODEL_ENDPOINT: chat
     image: banzai/audio-service:v0.0.1
     build:
       context: backend/audio-service

@@ -1,3 +1,4 @@
+import { ModelType } from "src/bot-interaction/bot-interaction.enum";
 import { DataSourceOptions } from "typeorm";
 
 export interface FileStorageConfig {
@@ -11,10 +12,17 @@ export interface ConnectionConfig {
     endpoint?: string;
 }
 
-const helperConfig: () => ConnectionConfig = () => ({
-    host: process.env.HELPER_HOST,
-    port: process.env.HELPER_PORT,
-    endpoint: process.env.HELPER_ENDPOINT,
+const modelsConfig = () => ({
+    "rule": {
+        host: process.env.RULE_MODEL_HOST,
+        port: process.env.RULE_MODEL_PORT,
+        endpoint: process.env.RULE_MODEL_ENDPOINT,
+    },
+    "default": {
+        host: process.env.DEFAULT_MODEL_HOST,
+        port: process.env.DEFAULT_MODEL_PORT,
+        endpoint: process.env.DEFAULT_MODEL_ENDPOINT,
+    }
 });
 const s2tConfig: () => ConnectionConfig = () => ({
     host: process.env.RECOGNITION_HOST,
@@ -44,7 +52,7 @@ const dbConfig = (): DataSourceOptions => ({
   
 export default () => ({
     port: parseInt(process.env.PORT, 10) || 3000,
-    bot: helperConfig(),
+    models: modelsConfig(),
     t2s: t2sConfig(),
     s2t: s2tConfig(),
     fileStorage: fileStorageConfig(),
