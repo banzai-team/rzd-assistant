@@ -15,6 +15,10 @@ export function sendRecord(payload: SendRecordPayload) {
   });
 }
 
+export function createChat() {
+  return axios.post(`${config.apiUrl}/conversation`);
+}
+
 
 //
 // export function addFlat(payload: SendModelPayload) {

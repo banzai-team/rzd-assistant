@@ -15,8 +15,20 @@ import {
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Recorder from './AudioRecorder';
 import logo from '../images/rzd.jpeg';
+import {useMutation} from 'react-query';
+import {createChat} from '../domain/api';
 
 const Chat: React.FC = () => {
+    const create = useMutation(createChat, {
+        onSuccess: (data) => {
+            console.log('Chat created')
+        }
+    });
+    
+    React.useEffect(() => {
+        create.mutate();
+    }, []);
+    
     const messages = [
         {
             message: "Hello my friend",
