@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Logger, Param, ParseIntPipe, Post, Query, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Inject, Logger, Param, ParseIntPipe, Post, Query, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ConversationService } from './conversation.service';
 import { CreateConversationRequest } from './conversation.dto';
@@ -53,7 +53,11 @@ export class ConversationController {
 
     @Get(':id')
     async loadConversation(@Param('id', ParseIntPipe) id: number) {
-        return this.conversationService.getConversationById(id);
+        const conv = await this.conversationService.getConversationById(id);
+        if (!conv) {
+            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+        }
+        return conv
     }
 
     @Get('/:id/messages')
