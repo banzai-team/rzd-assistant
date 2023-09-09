@@ -4,6 +4,10 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryColumn, 
 export class Conversation {
     @PrimaryGeneratedColumn()
     id: number;
+    @Column({
+        nullable: true
+    })
+    train: string;
 
     @OneToMany(m => Message, m => m.conversation)
     messages: Message[];
