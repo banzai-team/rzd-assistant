@@ -5,15 +5,20 @@ export interface FileStorageConfig {
     dir: string;
 }
 
-const helperConfig = () => ({
+export interface ConnectionConfig {
+    host: string;
+    port: string;
+}
+
+const helperConfig: () => ConnectionConfig = () => ({
     host: process.env.HELPER_HOST,
     port: process.env.HELPER_PORT
 });
-const s2tConfig = () => ({
+const s2tConfig: () => ConnectionConfig = () => ({
     host: process.env.RECOGNITION_HOST,
     port: process.env.RECOGNITION_PORT
 });
-const t2sConfig = () => ({
+const t2sConfig: () => ConnectionConfig = () => ({
     host: process.env.T2S_HOST,
     port: process.env.T2S_PORT
 });

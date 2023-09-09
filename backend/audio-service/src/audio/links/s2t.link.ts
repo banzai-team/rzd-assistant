@@ -25,17 +25,17 @@ export class S2T {
 
     private async s2tInternal(speech: SavedFile): Promise<TextDto> {
         this.logger.debug(`Transforming speech::${speech.path} into text. Performing request to::${this.s2tConfig.host}:${this.s2tConfig.port}/transform`);
-        return await firstValueFrom(
-            this.http.post(`http://${this.s2tConfig.host}:${this.s2tConfig.port}/transform`, JSON.stringify({"file_path": speech.path}), {
-            headers: {'Content-Type': 'application/json'}
-        })
-            .pipe(
-                map(res => ({text: res.data.result}))
-            )
-            .pipe(
-                catchError(() => {
-                    throw new HttpException('S2T service is not available', HttpStatus.SERVICE_UNAVAILABLE);
-                }),
-            ));
+        try {
+            const resp = await firstValueFrom(
+                this.http.post(`http://${this.s2tConfig.host}:${this.s2tConfig.port}/transform`, JSON.stringify({"file_path": speech.path}), {
+                headers: {'Content-Type': 'application/json'}
+            }));
+            this.logger.debug(`Speech::${speech.path} was transfored into::${resp.data.result}`);
+            return {
+                text: resp.data.result
+            }
+        } catch(e) {
+            throw new HttpException('S2T service in not available', HttpStatus.SERVICE_UNAVAILABLE)
+        }
     }
 }
