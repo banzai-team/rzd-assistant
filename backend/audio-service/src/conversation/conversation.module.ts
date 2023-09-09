@@ -29,7 +29,8 @@ import { WebsocketModule } from 'src/app/websocket.module';
   exports: [
     UploadMessage,
     CreateMessage,
-    FileSend
+    FileSend,
+    ConversationService
   ]
 })
 export class ConversationModule {}
