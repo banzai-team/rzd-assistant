@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import "../styles/chat.css"
 
 import {Box, Flex, Button, Center, Text, Select, Card, IconButton} from '@chakra-ui/react';
@@ -37,7 +37,17 @@ const Chat: React.FC = () => {
     });
 
     const onCreate = () => create.mutate(train);
-    const onSend = (textContent: string) => sendText.mutate({text: textContent, id: chatId});
+    const onSend = (_: any, textContent: string) => {
+        console.log(textContent);
+        sendText.mutate({text: textContent, id: chatId})
+    };
+    const editorRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const msgInput = document.querySelector(".cs-message-input__content-editor") as HTMLDivElement;
+        editorRef.current = msgInput;
+        editorRef.current?.setAttribute("contenteditable", "plaintext-only");
+    },[]);
 
     return <Box height="100vh">
         <MainContainer>
@@ -112,6 +122,7 @@ const Chat: React.FC = () => {
                             alignItems="end"
                         >
                             <MessageInput
+                              contentEditable={false}
                                 placeholder="Type message here"
                                 attachButton={false}
                                 style={{flex: "1", borderTop: "none"}}
