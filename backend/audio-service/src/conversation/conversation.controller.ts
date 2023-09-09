@@ -20,26 +20,25 @@ export class ConversationController {
     async upload(
         @Param('id', ParseIntPipe) conversationId: number,
         @UploadedFile() file: Express.Multer.File,
+        @Body() body,
         ) {
-            const res = await this.messagePipeline.fileChain(
-                conversationId,
-                {
-                    file: {
-                            buffer: file.buffer,
-                            filename: file.originalname,
-                            mimetype: file.mimetype,
-                    },
-                    source: 'user'
-                });
-            return res
-    }
-
-    @Post('/:id/text')
-    async rawText(
-        @Param('id', ParseIntPipe) conversationId: number,
-        @Body() text: TextDto) {
-            const res = await this.messagePipeline.textChain(conversationId, text);
-            return res
+            if (file) {
+                const res = await this.messagePipeline.fileChain(
+                    conversationId,
+                    {
+                        file: {
+                                buffer: file.buffer,
+                                filename: file.originalname,
+                                mimetype: file.mimetype,
+                        },
+                        source: 'user'
+                    });
+                return res
+            } else if (body.text) {
+                this.logger.debug(`Sending raw text::${body.text}`)
+                const res = await this.messagePipeline.textChain(conversationId, {text: body.text});
+                return res
+            } 
     }
 
     @Post('create')
