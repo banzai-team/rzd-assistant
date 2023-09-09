@@ -16,7 +16,7 @@ export function sendRecord(payload: SendRecordPayload) {
 }
 
 export function createChat() {
-  return axios.post(`${config.apiUrl}/conversation`);
+  return axios.post(`${config.apiUrl}/conversation/create`);
 }
 
 
