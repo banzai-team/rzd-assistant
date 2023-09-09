@@ -26,7 +26,7 @@ jobs:
           YANDEX_AUTH_KEY: ${{ secrets.YANDEX_AUTH_KEY }}
       - run: |
           echo "Packaging docker image ..."
-          tag="$DOCKER_REGISTRY/banzai-ml-service:${{ github.sha }}"
+          tag="$DOCKER_REGISTRY/banzai-ml-chat-service:${{ github.sha }}"
           docker build . -t $tag
           docker push $tag
         env:
