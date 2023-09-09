@@ -8,11 +8,13 @@ export interface FileStorageConfig {
 export interface ConnectionConfig {
     host: string;
     port: string;
+    endpoint?: string;
 }
 
 const helperConfig: () => ConnectionConfig = () => ({
     host: process.env.HELPER_HOST,
-    port: process.env.HELPER_PORT
+    port: process.env.HELPER_PORT,
+    endpoint: process.env.HELPER_ENDPOINT,
 });
 const s2tConfig: () => ConnectionConfig = () => ({
     host: process.env.RECOGNITION_HOST,

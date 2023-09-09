@@ -48,7 +48,8 @@ services:
       FILE_STORAGE_LOCAL: true
       FILE_STORAGE_DIR: /tmp
       HELPER_HOST: ml-chat
-      HELPER_POST: 4444
+      HELPER_PORT: 4444
+      HELPER_ENDPOINT: rule_based_text
     image: banzai/audio-service:v0.0.1
     build:
       context: backend/audio-service
