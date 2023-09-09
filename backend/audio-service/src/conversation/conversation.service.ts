@@ -37,6 +37,7 @@ export class ConversationService {
         const msg = new Message();
         msg.content = text.text
         msg.time = new Date();
+        msg.source = source;
         msg.conversation = conversation;
         await this.messageRepository.save(msg);
         this.logger.debug(`Message was created`);
