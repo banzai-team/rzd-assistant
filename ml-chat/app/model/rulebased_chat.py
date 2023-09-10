@@ -51,7 +51,10 @@ def find_similar_queries(query, data, tfidf, tfidf_matrix):
     query_vector = tfidf.transform([query])
     similarity_scores = cosine_similarity(query_vector, tfidf_matrix)
     most_similar_query_index = similarity_scores.argsort()[0][-2]
-    most_similar_query = data[most_similar_query_index]
+    if not isinstance(data, list):
+        most_similar_query = list(data.iloc [:, 0])[most_similar_query_index]
+    else:
+        most_similar_query = data[most_similar_query_index]
     return most_similar_query
 
 
