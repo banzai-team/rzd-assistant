@@ -114,6 +114,7 @@ def process(query: str, chat_history: [str], message_id: int):
         last_user_message = f"Контекст: {retrieved_docs}\n\nИспользуя контекст, ответь на вопрос: {last_user_message}"
     tokens = get_system_tokens(model)[:]
     tokens.append(LINEBREAK_TOKEN)
+
     role_tokens = [model.token_bos(), BOT_TOKEN, LINEBREAK_TOKEN]
     tokens.extend(role_tokens)
 
@@ -122,7 +123,6 @@ def process(query: str, chat_history: [str], message_id: int):
     #     tokens.extend(message_tokens)
 
     logging.info("model: running model")
-
     generator = model.generate(
         tokens,
         top_k=30,
@@ -130,20 +130,16 @@ def process(query: str, chat_history: [str], message_id: int):
         temp=0.1
     )
 
-    # sql = """ UPDATE message
-    #                SET content = %s
-    #                WHERE id = %s"""
-
     message_tokens = get_message_tokens(model=model, role="user", content=last_user_message)
     tokens.extend(message_tokens)
 
-    partial_text = "еуыеыеые"
-    requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""", partial_text)
+    partial_text = ""
     for i, token in enumerate(generator):
         if token == model.token_eos() or (max_new_tokens is not None and i >= max_new_tokens):
             break
         partial_text += model.detokenize([token]).decode("utf-8", "ignore")
         logging.info(partial_text)
-        requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""", partial_text)
+        requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""",
+                       data={"content": partial_text})
 
     return partial_text
