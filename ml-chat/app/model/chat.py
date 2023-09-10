@@ -1,6 +1,7 @@
 import logging
 
 from app.config.config import config
+from app.model.rulebased_chat import RZD_MAP
 from huggingface_hub import snapshot_download
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -21,10 +22,9 @@ repo_name = "IlyaGusev/saiga2_13b_gguf"
 model_name = "ggml-model-q4_K.gguf"
 
 callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
-n_gpu_layers = 1  # Metal set to 1 is enough.
+n_gpu_layers = 0  # Metal set to 1 is enough.
 n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip.
 model_path = f"./data/{model_name}"
-db_path = "./data/test.txt"
 
 snapshot_download(repo_id=repo_name, local_dir="./data/", allow_patterns=model_name)
 model = Llama(
@@ -93,27 +93,40 @@ def load_db(file_path):
     return docsearch
 
 
-def retrieve(history, db, retrieved_docs, k_documents):
+def retrieve(last_user_message, db, retrieved_docs, k_documents):
     if db:
-        last_user_message = history[-1][0]
         retriever = db.as_retriever(search_kwargs={"k": k_documents})
         docs = retriever.get_relevant_documents(last_user_message)
         retrieved_docs = "\n\n".join([doc.page_content for doc in docs])
     return retrieved_docs
 
 
-def process(query: str, chat_history: [str], message_id: int):
-    chat_history = [[query] + chat_history]
+def process(query: str, user_messages: [str], bot_messages: [str], message_id: int, train_id: str):
     logging.info("db: started to load")
+    db_path = f"""./data/{RZD_MAP[train_id]}.txt"""
+
     db = load_db(db_path)
     logging.info("db: loaded")
-    retrieved_docs = retrieve(chat_history, db, [], 5)
 
-    last_user_message = chat_history[-1][0]
-    if retrieved_docs:
-        last_user_message = f"Контекст: {retrieved_docs}\n\nИспользуя контекст, ответь на вопрос: {last_user_message}"
+    retrieved_docs = retrieve(query, db, [], 5)
+
     tokens = get_system_tokens(model)[:]
     tokens.append(LINEBREAK_TOKEN)
+
+    for user_message in user_messages[:-1]:
+        message_tokens = get_message_tokens(model=model, role="user", content=user_message)
+        tokens.extend(message_tokens)
+
+    for bot_message in bot_messages[:-1]:
+        message_tokens = get_message_tokens(model=model, role="bot", content=bot_message)
+        tokens.extend(message_tokens)
+
+    last_user_message = query
+    if retrieved_docs:
+        last_user_message = f"Контекст: {retrieved_docs}\n\nИспользуя контекст, ответь на вопрос: {last_user_message}"
+
+    message_tokens = get_message_tokens(model=model, role="user", content=last_user_message)
+    tokens.extend(message_tokens)
 
     role_tokens = [model.token_bos(), BOT_TOKEN, LINEBREAK_TOKEN]
     tokens.extend(role_tokens)
@@ -129,9 +142,6 @@ def process(query: str, chat_history: [str], message_id: int):
         top_p=0.9,
         temp=0.1
     )
-
-    message_tokens = get_message_tokens(model=model, role="user", content=last_user_message)
-    tokens.extend(message_tokens)
 
     partial_text = ""
     for i, token in enumerate(generator):

@@ -34,7 +34,7 @@ class RuleBased(BaseModel):
 
 @app.post("/text")
 def speech_to_text(item: Item):
-    thread = Thread(target=process, args=(item.query, item.userContext, item.message_id))
+    thread = Thread(target=process, args=(item.query, item.userContext, item.botContext, item.message_id, item.train_id))
     thread.start()
     return {"result": ""}
 
