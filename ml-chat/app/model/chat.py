@@ -92,6 +92,7 @@ def load_db(file_path):
 
     logging.info("building search db")
     docsearch = Chroma.from_documents(fixed_documents, embeddings)
+    logging.info("search db built")
     return docsearch
 
 
@@ -151,7 +152,7 @@ def process(query: str, user_messages: [str], bot_messages: [str], message_id: i
             break
         partial_text += model.detokenize([token]).decode("utf-8", "ignore")
         logging.info(partial_text)
-        # requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""",
-        #                data={"content": partial_text})
+        requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""",
+                       data={"content": partial_text})
 
     return partial_text
