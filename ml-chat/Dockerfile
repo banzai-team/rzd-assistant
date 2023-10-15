@@ -1,4 +1,4 @@
-FROM python:3.10 as base
+FROM python:3.11 as base
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends build-essential gcc-11 g++-11 clang
@@ -17,7 +17,7 @@ WORKDIR /app
 
 COPY ./requirements.txt /app/requirements.txt
 
-RUN UNAME_M=arm64 UNAME_p=arm LLAMA_NO_METAL=1 pip install -r /app/requirements.txt
+RUN UNAME_M=arm64 UNAME_p=arm CMAKE_ARGS="-DLLAMA_METAL=on" pip install -r /app/requirements.txt
 
 FROM base
 #

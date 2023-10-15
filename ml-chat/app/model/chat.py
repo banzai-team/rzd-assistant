@@ -2,7 +2,8 @@ import logging
 
 from app.config.config import config
 from app.model.rulebased_chat import RZD_MAP
-from huggingface_hub import snapshot_download
+# from huggingface_hub import snapshot_download
+from huggingface_hub import hf_hub_download
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.document_loaders import TextLoader
@@ -19,14 +20,15 @@ embedder_name = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
 embeddings = SentenceTransformerEmbeddings(model_name=embedder_name)
 
 repo_name = "IlyaGusev/saiga2_13b_gguf"
-model_name = "ggml-model-q4_K.gguf"
+model_name = "model-q4_K.gguf"
 
 callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
-n_gpu_layers = 0  # Metal set to 1 is enough.
+n_gpu_layers = 1  # Metal set to 1 is enough.
 n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip.
+
 model_path = f"./data/{model_name}"
 
-snapshot_download(repo_id=repo_name, local_dir="./data/", allow_patterns=model_name)
+hf_hub_download(repo_id=repo_name, filename=model_name, local_dir="./data")
 model = Llama(
     model_path=model_path,
     n_gpu_layers=n_gpu_layers,
@@ -149,7 +151,7 @@ def process(query: str, user_messages: [str], bot_messages: [str], message_id: i
             break
         partial_text += model.detokenize([token]).decode("utf-8", "ignore")
         logging.info(partial_text)
-        requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""",
-                       data={"content": partial_text})
+        # requests.patch(f"""http://{config.BACKEND_HOST}:{config.BACKEND_PORT}/conversation/message/{message_id}""",
+        #                data={"content": partial_text})
 
     return partial_text
